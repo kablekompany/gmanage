@@ -3,7 +3,7 @@ from setuptools import setup
 with open("./guildmanager/__init__.py") as i:
 	I = i.readlines()[0].split(" ")[-1]   # __version__ = ["this.here.now"]
 
-with open("./readme.md") as a:
+with open("./README.md") as a:
 	AM = a.read()
 
 with open("./requirements.txt") as m:
