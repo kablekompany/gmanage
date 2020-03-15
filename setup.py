@@ -18,7 +18,7 @@ setup(
 	project_urls={
 		"Docs": "https://docs.dragdev.xyz/gm/"
 	},
-	packages="guildmanager",
+	packages=["guildmanager"],
 	package_dir={'': './guildmanager'},
 	license="MIT",
 	description="Simple and easy guild management for python discord bots.",
