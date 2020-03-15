@@ -19,7 +19,6 @@ setup(
 		"Docs": "https://docs.dragdev.xyz/gm/"
 	},
 	packages=["guildmanager"],
-	package_dir={'': './guildmanager'},
 	license="MIT",
 	description="Simple and easy guild management for python discord bots.",
 	long_description_content_type="text/x-markdown",
