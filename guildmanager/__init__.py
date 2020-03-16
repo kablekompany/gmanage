@@ -15,7 +15,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-__version__ = 1
+__version__ = 1.1
+import guildmanager.cog
+from guildmanager import cog
+from guildmanager.cog import *
 from guildmanager.cog import GMcog as GuildManager
 from guildmanager.cog import setup
 
