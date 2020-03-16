@@ -85,6 +85,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				guilds = list(sorted(guilds, key=lambda g: g.member_count, reverse=True))
 			if "--sort-by-bots" in flags or "-sbb" in flags:
 				guilds = list(sorted(guilds, key=lambda g: len([m for m in g.members if m.bot]), reverse=True))
+		else:
+			guilds = list(sorted(guilds, key=lambda g: g.name))
 		e = discord.Embed(
 			title=f"Guilds: {len(guilds)}",
 			color=discord.Color.blurple()
