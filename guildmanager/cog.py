@@ -16,9 +16,13 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 SOFTWARE.
 """
 import discord
+import git
+import subprocess
+from datetime import datetime, tzinfo
 from discord.ext import commands
 from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
+from guildmanager import __version__
 
 from guildmanager.io import read
 
@@ -115,6 +119,54 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				await paginator.add_line(line)
 		await ctx.send(embed=e, delete_after=60*30)
 		await paginator.send_to(ctx.channel)
+
+	@commands.Cog.listener(name="on_guild_join")
+	@commands.Cog.listener(name="on_guild_update")
+	async def check_guild_banned(self, guild: discord.Guild, extra: discord.Guild = None):
+		"""Checks if a guild is banned, on guild update and on guild join. This also picks up the custom 
+		event "on_guild_ban"
+
+		This dispatches an event called "banned_guild_leave", which you can do whatever with as a regular listener
+		(e.g @commands.Cog.listen(name="on_banned_guild_leave"))
+		does NOT trigger `guild leave` notification.
+		"""
+		# we leave `extra` there for on_guild_update, where we dont really need it. And to prevent Missing arg errors, we make it optional
+		if str(guild.id) in self.data[str(guild.me.id)]["bans"]["servers"].keys():
+			reason = self.data[str(guild.me.id)]["bans"]["servers"][str(guild.id)]
+			try:
+				await guild.owner.send(f"Your guild, **{guild.name}** has been banned from using this bot (with the reason '{reason}'.). Contact a developer"
+				" to see if you can appeal this.")
+			except discord.Forbidden:
+				pass
+
+	@commands.group(name="guildmanager", aliases=['gm'], invoke_without_command=True)
+	async def gmroot(self, ctx: commands.Context):
+		"""
+		meta commands relating to the guildmanager module itself.
+		without a subcommand this returns basic information.
+		"""
+		since = datetime(2020, 3, 15, 23, 50, 34, 0)
+		try:
+			last_commit = str(subprocess.check_output(["git", "rev-parse", "HEAD"]))
+		except FileNotFoundError:
+			return await ctx.send(f"Unable to get last version - git is not installed.")
+		e = discord.Embed(
+			title=f"GuildManager - version {__version__} [commit {last_commit[:7]}]",
+			color=discord.Color.blue(),
+			timestamp=since
+		)
+		if float('.'.join(__version__.split(".")[:1])) > 0.2:
+			with open("vers.ion") as cur_version:
+				cur = cur_version.read()
+
+			if cur != last_commit:
+				footer = f"Your module is out of date! Commit {last_commit[:7]} is available, and you're on {last_commit[:7]}."
+			else:
+				footer = f"Your module is up to date!"
+		else:
+			footer = f"Your module is out of date, and the git hash could not be determined."
+		e.set_footer(text=footer + " | Live since ")
+		
 
 
 def setup(bot):

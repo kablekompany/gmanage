@@ -16,6 +16,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 SOFTWARE.
 """
 from setuptools import setup
+import subprocess
 
 with open("./guildmanager/__init__.py") as i:
 	I = i.readlines()[0].split(" ")[-1]   # __version__ = ["this.here.now"]
@@ -45,3 +46,9 @@ setup(
 	classifiers=     SENATE,
 	python_requires=">=3.7"
 )
+try:
+	with open("vers.ion", "w+") as file:
+		out = str(subprocess.check_output(["git", "rev-parse", "HEAD"]))
+		file.write(out.strip())
+except:
+	pass

@@ -36,7 +36,7 @@ class CustomGuildManager(cog.GMcog):
         # just a regular @commands.check() function. see: https://discordpy.readthedocs.io/en/latest/ext/commands/api.html#discord.ext.commands.check
 ```
 then instead of `bot.load_extension("guildmanager")` do `bot.load_extension("path.to.the.file")` where path.to.the.file leads to the file `CustomGuildManager` is located.
-
+In fact, most things in the cog are subclassable. This can be useful if you want to change the ban message in `cog.py - guild_ban_check`.
 ## quick install:
 ```
 # UNIX-based systems, like macos and linux distros:
