@@ -28,10 +28,14 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 
 	Read about it at the readme: https://github.com/dragdev-studios/guildmanager/blob/master/README.md"""
 	def __init__(self, bot):
-		if not bot.user.bot:
-			raise TypeError("GMcog, __init__, bot: bot is not an actual bot but instead a Client, probably selfbot."
-							" GM does not work with this type of account.")
+		if bot.is_ready():
+			if not bot.user.bot:
+				raise TypeError("GMcog, __init__, bot: bot is not an actual bot but instead a Client, probably selfbot."
+								" GM does not work with this type of account.")
+			else:
+				self.bot = bot
 		else:
+			print(f"Internal cache of bot was not loaded and Guildmanagement could not identify Type. Loaded anyway.")
 			self.bot = bot
 		self.data = read("./data.json", create_new=True,
 						 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
