@@ -1,7 +1,9 @@
 __version__ = 1
 from guildmanager.cog import GMcog as GuildManager
-from guildmanager.cog import setup as cogsetup
+from guildmanager.cog import setup
 
-def setup(bot):
-	"""Alias for cogsetup() when doing bot.load_extension"""
-	cogsetup(bot)
+__all__ = (
+	"GuildManager",
+	"setup",
+	"__version__"
+)
