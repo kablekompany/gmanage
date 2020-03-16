@@ -1,0 +1,8 @@
+README.md
+setup.py
+GuildManager.egg-info/PKG-INFO
+GuildManager.egg-info/SOURCES.txt
+GuildManager.egg-info/dependency_links.txt
+GuildManager.egg-info/requires.txt
+GuildManager.egg-info/top_level.txt
+guildmanager/__init__.py
