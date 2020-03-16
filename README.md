@@ -40,6 +40,6 @@ bot.load_extension("guildmanager.cog")
 ```
 
 ## Known issues loading:
-#1 - Errors loading initially after install due to file issues [SOLVED]
-#2 - Errors loading before bot is ready
+- #1 - Errors loading initially after install due to file issues [SOLVED]
+- #2 - Errors loading before bot is ready
 **Have an issue loading the cog?** [create a new issue](https://https://github.com/dragdev-studios/guildmanager/issues/new)
