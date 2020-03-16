@@ -117,5 +117,10 @@ def setup(bot):
 		bot.add_cog(GMcog(bot))
 	except TypeError as error:
 		raise commands.ExtensionNotLoaded from error
+	except commands.ExtensionFailed as orig:
+		try:
+			bot.add_cog(GMcog(bot))
+		except Exception as f:
+			raise Exception from f
 	except Exception as unknownerror:
 		raise commands.ExtensionError from unknownerror
