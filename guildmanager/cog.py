@@ -28,19 +28,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 
 	Read about it at the readme: https://github.com/dragdev-studios/guildmanager/blob/master/README.md"""
 	def __init__(self, bot):
-		try:
-			if bot.is_ready():
-				if not bot.user.bot:
-					raise TypeError("GMcog, __init__, bot: bot is not an actual bot but instead a Client, probably selfbot."
-									" GM does not work with this type of account.")
-				else:
-					self.bot = bot
-			else:
-				print(f"Internal cache of bot was not loaded and Guildmanagement could not identify Type. Loaded anyway.")
-				self.bot = bot
-		except:
-			print("Error determining if bot was a bot. Issues may arise. guildmanagement loaded anyway.")
-			self.bot = bot
+		self.bot = bot
 		self.data = read("./data.json", create_new=True,
 						 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
 															  "infractions": {},
@@ -54,7 +42,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 
 	async def cog_check(self, ctx: commands.Context):
 		"""The check for every command + subcommand in this cog."""
-		return await ctx.bot.is_owner(ctx.author)
+		return await ctx.bot.is_owner(ctx.author) and ctx.bot.user.bot
 
 	@commands.group(name="guilds", aliases=["servers", "gm", "GuildManagement"], case_insensitive=True,
 					invoke_without_command=True)

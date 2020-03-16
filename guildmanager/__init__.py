@@ -30,4 +30,7 @@ __all__ = (
 
 
 def setup(bot):
-	_setup(bot)
+	try:
+		_setup(bot)
+	except Exception as e:
+		print(f"Error while loading GuildManager. Not loaded.", e)
