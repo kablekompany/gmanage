@@ -56,7 +56,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		"""
 		Lists all servers. Pretty simple. To see a list of every command, run [p]help guilds.
 
-		:flags: are a list of command-line style flags (below), separated by spaces.
+		`:flags:` are a list of command-line style flags (below), separated by spaces.
 		Flags:
 		  * `--extended`: Shows extended information format (#. name (ID) [Owner Name | Owner ID])
 		  * `--sort-by-join-recent`: Sorts list by guilds joined from most recent to oldest join.

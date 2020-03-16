@@ -28,8 +28,10 @@ def read(filepath: str, *, create_new: bool = False, default_new: dict = None) -
 		return data
 	except FileNotFoundError as FNFE:
 		if create_new:
+			data = default_new or {}
 			try:
 				write(filepath, default_new or {})
+				data = default_new or {}
 			except Exception as fail:
 				raise OSError("Failed to create new file.") from fail
 			else:
