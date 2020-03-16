@@ -35,7 +35,7 @@ class CustomGuildManager(cog.GMcog):
     async def cog_check(self, ctx: commands.Context):
         # just a regular @commands.check() function. see: https://discordpy.readthedocs.io/en/latest/ext/commands/api.html#discord.ext.commands.check
 ```
-then instead of `bot.load_extension("guildmanager.cog")` do `bot.load_extension("path.to.the.file")` where path.to.the.file leads to the file `CustomGuildManager` is located.
+then instead of `bot.load_extension("guildmanager")` do `bot.load_extension("path.to.the.file")` where path.to.the.file leads to the file `CustomGuildManager` is located.
 
 ## quick install:
 ```
@@ -47,7 +47,7 @@ pip install git+https://github.com/dragdev-studios/guildmanager
 ```
 ## quick load
 ```
-bot.load_extension("guildmanager.cog")
+bot.load_extension("guildmanager")
 ```
 
 ## Known issues loading:
