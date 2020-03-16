@@ -15,15 +15,19 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-__version__ = "0.2a"
+__version__ = "0.2.1a"
 import guildmanager.cog
 from guildmanager import cog
 from guildmanager.cog import *
 from guildmanager.cog import GMcog as GuildManager
-from guildmanager.cog import setup
+from guildmanager.cog import setup as _setup
 
 __all__ = (
 	"GuildManager",
 	"setup",
 	"__version__"
 )
+
+
+def setup(bot):
+	_setup(bot)
