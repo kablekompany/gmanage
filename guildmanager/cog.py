@@ -89,6 +89,17 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			guilds = list(sorted(guilds, key=lambda g: g.name))
 		e = discord.Embed(
 			title=f"Guilds: {len(guilds)}",
+			description=f"New server join notification channel: "
+						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel']))}\nNew server "
+						f"notification:"
+						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel'])).format(ctx.guild)}"
+						f"\nserver leave notification channel: "
+						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['serverleavechannel']))}\nServer leave"
+						f" notification: "
+						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['leaveservermessage']))}\n"
+						f"Guild cap: {self.data[str(self.bot.user.id)]['maxservers']}\n"
+						f"join lock: {self.data[str(self.bot.user.id)]['joinlock']}\n"
+						f"join queue: {self.data[str(self.bot.user.id)]['queuejoins']}\n",
 			color=discord.Color.blurple()
 		)
 		e.add_field(name="Most recently joined guild:",
