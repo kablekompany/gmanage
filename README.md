@@ -26,6 +26,17 @@ The [documentation](https://docs.dragdev.xyz/gm) explains it all.
 You can join our [discord server](https://beta.dragdev.xyz/r/server.html) and motivate us. We don't take payments or donations unless you beg us to, which is 
 rather strange considering you would be begging to spend money.
 
+### FAQ:
+- Q: How do I make it so other users can run the guild manager's commands?
+* A: use the following code snippet to subclass the cog, and change the check:
+```
+from guildmanager import cog
+class CustomGuildManager(cog.GMcog):
+    async def cog_check(self, ctx: commands.Context):
+        # just a regular @commands.check() function. see: https://discordpy.readthedocs.io/en/latest/ext/commands/api.html#discord.ext.commands.check
+```
+then instead of `bot.load_extension("guildmanager.cog")` do `bot.load_extension("path.to.the.file")` where path.to.the.file leads to the file `CustomGuildManager` is located.
+
 ## quick install:
 ```
 # UNIX-based systems, like macos and linux distros:
