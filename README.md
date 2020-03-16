@@ -38,3 +38,7 @@ pip install git+https://github.com/dragdev-studios/guildmanager
 ```
 bot.load_extension("guildmanager.cog")
 ```
+
+## Known issues loading:
+#1 - Errors loading initially after install due to file issues [SOLVED]
+#? - Errors loading before bot is ready
