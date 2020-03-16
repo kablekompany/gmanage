@@ -34,3 +34,7 @@ python3 -m pip install git+https://github.com/dragdev-studios/guildmanager
 # Windows
 pip install git+https://github.com/dragdev-studios/guildmanager
 ```
+## quick load
+```
+bot.load_extension("guildmanager.cog")
+```
