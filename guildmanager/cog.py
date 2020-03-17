@@ -173,6 +173,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		else:
 			footer = f"Your module is out of date, and the git hash could not be determined."
 		e.set_footer(text=footer + " | Live since ")
+		await ctx.send(embed=e)
 
 	@gmroot.command(name="update")
 	async def gm_update(self, ctx: commands.Context, force: bool = False):
