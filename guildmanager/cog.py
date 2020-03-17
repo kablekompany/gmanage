@@ -15,15 +15,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-import discord
-import git
+import os
 import subprocess
-from datetime import datetime, tzinfo
+from datetime import datetime
+
+import discord
 from discord.ext import commands
 from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
-from guildmanager import __version__
 
+from guildmanager import __version__
 from guildmanager.io import read
 
 
@@ -166,7 +167,26 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		else:
 			footer = f"Your module is out of date, and the git hash could not be determined."
 		e.set_footer(text=footer + " | Live since ")
-		
+
+	@gmroot.command(name="update")
+	async def gm_update(self, ctx: commands.Context, force: bool = False):
+		"""[optionally force] updates the module automatically."""
+		await ctx.message.delete(delay=30)
+		url = "https://github.com/dragdev-studios/guildmanager"
+		cmd = "python -m pip install git+{url} --upgrade --user"
+		res = os.system(cmd)
+		if res != 0:
+			return await ctx.send(f"Something went wrong while updating (cmd returned code other than 0). Please"
+								  f" update manually with command `{url}`.", delete_after=30)
+		else:
+			try:
+				self.bot.reload_extension("guildmanager")
+			except Exception as e:
+				await ctx.send(f"Error reloading updated module: `{str(e)}`. Traceback has been raised. If this issue"
+							   f" persists, please open an issue at {url}/issues/new.", delete_after=30)
+				raise commands.ExtensionFailed from e
+			else:
+				return await ctx.send(f"Successfully reloaded.", delete_after=10)
 
 
 def setup(bot):
