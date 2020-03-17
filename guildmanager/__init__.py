@@ -15,10 +15,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-__version__ = "0.2.2a"
-__changelog__ = {
-	"0.2.2a": "Changelog stared. added guild invite and the guild ban check system."
-}
+__version__ = "0.2.5a"
 import guildmanager.cog
 from guildmanager import cog
 from guildmanager.cog import *
