@@ -135,12 +135,13 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		if str(guild.id) in self.data[str(guild.me.id)]["bans"]["servers"].keys():
 			reason = self.data[str(guild.me.id)]["bans"]["servers"][str(guild.id)]
 			try:
-				await guild.owner.send(f"Your guild, **{guild.name}** has been banned from using this bot (with the reason '{reason}'.). Contact a developer"
-				" to see if you can appeal this.")
+				await guild.owner.send(
+					f"Your guild, **{guild.name}** has been banned from using this bot (with the reason '{reason}'.). Contact a developer"
+					" to see if you can appeal this.")
 			except discord.Forbidden:
 				pass
 
-	@commands.group(name="guildmanager", aliases=['gm'], invoke_without_command=True)
+	@commands.group(name="guildmanager", invoke_without_command=True)
 	async def gmroot(self, ctx: commands.Context):
 		"""
 		meta commands relating to the guildmanager module itself.
