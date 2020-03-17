@@ -176,7 +176,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		url = "https://github.com/dragdev-studios/guildmanager"
 		cmd = "python -m pip install git+{url} --upgrade --user"
 		res = os.system(cmd)
-		if res != 0:
+		if res not in [0, 256]:
 			return await ctx.send(f"Something went wrong while updating (cmd returned code other than 0). Please"
 								  f" update manually with command `{cmd}`. `returned: {res}`", delete_after=30)
 		else:
