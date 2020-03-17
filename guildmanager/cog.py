@@ -157,7 +157,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			color=discord.Color.blue(),
 			timestamp=since
 		)
-		if float('.'.join(__version__.split(".")[:1])) > 0.2:
+		if float('.'.join(str(__version__).split(".")[:1])) > 0.2:
 			with open("vers.ion") as cur_version:
 				cur = cur_version.read()
 
