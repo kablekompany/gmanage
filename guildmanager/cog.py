@@ -131,7 +131,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		(e.g @commands.Cog.listen(name="on_banned_guild_leave"))
 		does NOT trigger `guild leave` notification.
 		"""
-		# we leave `extra` there for on_guild_update, where we dont really need it. And to prevent Missing arg errors, we make it optional
+		# we leave `extra` there for on_guild_update, where we dont really need it. And to prevent Missing arg errors,
+		# we make it optional
 		if str(guild.id) in self.data[str(guild.me.id)]["bans"]["servers"].keys():
 			reason = self.data[str(guild.me.id)]["bans"]["servers"][str(guild.id)]
 			try:
@@ -141,7 +142,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			except discord.Forbidden:
 				pass
 
-	@commands.group(name="guildmanager", invoke_without_command=True)
+	@commands.group(name="guildmanager", invoke_without_command=True, aliases=['gmeta', 'gman', 'gmd'])
 	async def gmroot(self, ctx: commands.Context):
 		"""
 		meta commands relating to the guildmanager module itself.
