@@ -178,7 +178,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		res = os.system(cmd)
 		if res != 0:
 			return await ctx.send(f"Something went wrong while updating (cmd returned code other than 0). Please"
-								  f" update manually with command `{url}`.", delete_after=30)
+								  f" update manually with command `{cmd}`. `returned: {res}`", delete_after=30)
 		else:
 			try:
 				self.bot.reload_extension("guildmanager")
