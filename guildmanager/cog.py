@@ -158,13 +158,17 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			timestamp=since
 		)
 		if float('.'.join(str(__version__).split(".")[:1])) > 0.2:
-			with open("vers.ion") as cur_version:
-				cur = cur_version.read()
+			try:
+				with open("vers.ion") as cur_version:
+					cur = cur_version.read()
 
-			if cur != last_commit:
-				footer = f"Your module is out of date! Commit {last_commit[:7]} is available, and you're on {last_commit[:7]}."
-			else:
-				footer = f"Your module is up to date!"
+				if cur != last_commit:
+					footer = f"Your module is out of date! Commit {last_commit[:7]} is available, and you're on {last_commit[:7]}."
+				else:
+					footer = f"Your module is up to date!"
+			except FileNotFoundError:
+				footer = f"Unable to determine if module is up to date because `vers.ion` file is missing or damaged. " \
+						 f"Please re-instll the module."
 		else:
 			footer = f"Your module is out of date, and the git hash could not be determined."
 		e.set_footer(text=footer + " | Live since ")
