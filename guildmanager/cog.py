@@ -25,7 +25,7 @@ from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
 
 from guildmanager import __version__
-from guildmanager.io import read
+from guildmanager.io import read, write
 
 
 class GMcog(commands.Cog, name="Guild Management Cog"):
@@ -70,6 +70,10 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		There are no restrictions, so you can use every flag if you want. However this would be very contradicting.
 		All flags are processed in the above order, starting with `--extended` to `--sort-by-bots`.
 		"""
+		if not self.data.get(str(ctx.bot.user.id)):
+			return await ctx.send(f"Error reading `data.json`. If it has been deleted or moved, please run "
+								  f"`{ctx.prefix}guildmanager repair`. If this does not work, you will have to"
+								  f" fresh-install the module.")
 		flags = [fl.lower() for fl in flags if fl.startswith("--")]
 		guilds = self.bot.guilds
 		extended = "--extended" in flags or "-e" in flags
@@ -194,6 +198,35 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				raise commands.ExtensionFailed from e
 			else:
 				return await ctx.send(f"Successfully reloaded.", delete_after=10)
+
+	@gmroot.command(name="repair")
+	async def gm_fix(self, ctx: commands.Context):
+		"""Fixes issues with the data.json file."""
+		msg = await ctx.send(f"Attempting to write default data...")
+		try:
+			self.data = read("./data.json", create_new=True,
+							 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
+																  "infractions": {},
+																  "newserverchannel": None,
+																  "serverleavechannel": None,
+																  "newservermessage": "Joined server {0.name}.",
+																  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+																  "maxservers": None,
+																  "joinlock": False,
+																  "queuejoins": False}})
+			return await msg.edit(content="Fixed.")
+		except:
+			await msg.edit(content="Creating new file.")
+			x = write("./data.json", data={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
+																   "infractions": {},
+																   "newserverchannel": None,
+																   "serverleavechannel": None,
+																   "newservermessage": "Joined server {0.name}.",
+																   "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+																   "maxservers": None,
+																   "joinlock": False,
+																   "queuejoins": False}}, indent=2, rollback=False)
+			await msg.edit(content=f"Fixed.")
 
 
 def setup(bot):

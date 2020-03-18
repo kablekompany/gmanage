@@ -1,4 +1,6 @@
 import datetime
+
+
 def ago_time(time):
 	"""Convert a time (datetime) to a human readable format.
 	"""
