@@ -57,3 +57,4 @@ bot.load_extension("guildmanager")
 
 ### Fancy Badges:
 [![codebeat badge](https://codebeat.co/badges/7d5ba40c-c352-4451-8f1e-740fa4406fa7)](https://codebeat.co/projects/github-com-dragdev-studios-guildmanager-master)
+[![Python application](https://github.com/dragdev-studios/guildmanager/workflows/Python%20application/badge.svg)]
