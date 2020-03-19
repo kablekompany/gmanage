@@ -54,3 +54,7 @@ bot.load_extension("guildmanager")
 - [#1](https://github.com/dragdev-studios/guildmanager/issues/1) - Errors loading initially after install due to file issues [SOLVED]
 - [#2](https://github.com/dragdev-studios/guildmanager/issues/2) - Errors loading before bot is ready
 **Have an issue loading the cog?** [create a new issue](https://https://github.com/dragdev-studios/guildmanager/issues/new)
+
+### Fancy Badges:
+[![codebeat badge](https://codebeat.co/badges/7d5ba40c-c352-4451-8f1e-740fa4406fa7)](https://codebeat.co/projects/github-com-dragdev-studios-guildmanager-master)
+[![Python application](https://github.com/dragdev-studios/guildmanager/workflows/Python%20application/badge.svg)]
