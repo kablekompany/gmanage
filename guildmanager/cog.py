@@ -193,6 +193,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 	@gmroot.command(name="update")
 	async def gm_update(self, ctx: commands.Context):
 		"""[optionally force] updates the module automatically."""
+		self.data["git ver"] = str(subprocess.check_output(["git", "rev-parse", "HEAD"])).encode("utf-8")
 		await ctx.message.delete(delay=30)
 		url = "https://github.com/dragdev-studios/guildmanager"
 		cmd = "python -m pip install git+{url} --upgrade --user"
@@ -203,7 +204,6 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				f" update manually with command `{cmd}`. `returned: {res}`", delete_after=30)
 		else:
 			await asyncio.sleep(8)  # testing reveals on average its 7 seconds on a 93mbps download speed to update.
-			self.data["git ver"] = str(subprocess.check_output(["git", "rev-parse", "HEAD"])).encode("utf-8")
 			try:
 				self.bot.reload_extension("guildmanager.cog")
 			except Exception as e:
