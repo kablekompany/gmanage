@@ -202,7 +202,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				f"Something went wrong while updating (cmd returned code other than 0(win32) or 256(linux). Please"
 				f" update manually with command `{cmd}`. `returned: {res}`", delete_after=30)
 		else:
-			await asyncio.sleep(8)  # testing reveals on average its 7 seconds on a [tba]mbps download speed to update.
+			await asyncio.sleep(8)  # testing reveals on average its 7 seconds on a 93mbps download speed to update.
 			self.data["git ver"] = str(subprocess.check_output(["git", "rev-parse", "HEAD"])).encode("utf-8")
 			try:
 				self.bot.reload_extension("guildmanager.cog")
