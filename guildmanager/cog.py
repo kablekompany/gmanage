@@ -34,7 +34,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 	Read about it at the readme: https://github.com/dragdev-studios/guildmanager/blob/master/README.md"""
 	def __init__(self, bot):
 		self.bot = bot
-		self.data = read("./data.json", create_new=True,
+		self.data = read("./guildmanager.data", create_new=True,
 						 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
 															  "infractions": {},
 															  "newserverchannel": None,
@@ -43,7 +43,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 															  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
 															  "maxservers": None,
 															  "joinlock": False,
-															  "queuejoins": False}})
+															  "queuejoins": False, "first run": True}})
 
 	async def cog_check(self, ctx: commands.Context):
 		"""The check for every command + subcommand in this cog."""
@@ -191,10 +191,11 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 								  f" update manually with command `{cmd}`. `returned: {res}`", delete_after=30)
 		else:
 			try:
-				self.bot.reload_extension("guildmanager")
+				self.bot.reload_extension("guildmanager.cog")
 			except Exception as e:
 				await ctx.send(f"Error reloading updated module: `{str(e)}`. Traceback has been raised. If this issue"
-							   f" persists, please open an issue at {url}/issues/new.", delete_after=30)
+							   f" persists, please open an issue at {url}/issues/new.\n\nSee: "
+							   f"<{url}/issues/6>", delete_after=30)
 				raise commands.ExtensionFailed from e
 			else:
 				return await ctx.send(f"Successfully reloaded.", delete_after=10)
@@ -238,10 +239,5 @@ def setup(bot):
 		bot.add_cog(GMcog(bot))
 	except TypeError as error:
 		raise commands.ExtensionNotLoaded from error
-	except commands.ExtensionFailed as orig:
-		try:
-			bot.add_cog(GMcog(bot))
-		except Exception as f:
-			raise Exception from f
 	except Exception as unknownerror:
 		raise commands.ExtensionError from unknownerror
