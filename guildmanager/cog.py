@@ -43,7 +43,11 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 															  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
 															  "maxservers": None,
 															  "joinlock": False,
-															  "queuejoins": False, "first run": True}})
+															  "queuejoins": False, "first run": True,
+															  "git ver": str(subprocess.check_output(["git",
+																									  "rev-parse",
+																									  "HEAD"])).strip()
+															  }})
 
 	async def cog_check(self, ctx: commands.Context):
 		"""The check for every command + subcommand in this cog."""
