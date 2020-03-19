@@ -10,7 +10,7 @@ It has many commands and features, some of which are listed below:
   - Nice UI for listing servers
   - Embedded Pagination
   - In-depth analytics for gathering information on servers your bot uses
-  - ability to access servers (via creating an invite) or even remotely talking to users with our unuiqe *Remote Access* chat feature.
+  - ability to access servers (via creating an invite) or even remotely talking to users with our unique *Remote Access* chat feature.
   - banning servers, and the ability to ban every server owned by a user.
   - server infractions, and limits
   - suspicious server alerts
