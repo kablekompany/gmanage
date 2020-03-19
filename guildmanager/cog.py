@@ -15,6 +15,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import asyncio
 import os
 import subprocess
 from datetime import datetime
@@ -201,6 +202,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				f"Something went wrong while updating (cmd returned code other than 0(win32) or 256(linux). Please"
 				f" update manually with command `{cmd}`. `returned: {res}`", delete_after=30)
 		else:
+			await asyncio.sleep(5)
 			self.data["git ver"] = str(subprocess.check_output(["git", "rev-parse", "HEAD"])).encode("utf-8")
 			try:
 				self.bot.reload_extension("guildmanager.cog")
