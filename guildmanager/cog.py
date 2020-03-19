@@ -209,7 +209,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		"""Fixes issues with the data.json file."""
 		msg = await ctx.send(f"Attempting to write default data...")
 		try:
-			self.data = read("./data.json", create_new=True,
+			self.data = read("./guildmanager.data", create_new=True,
 							 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
 																  "infractions": {},
 																  "newserverchannel": None,
@@ -218,19 +218,28 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 																  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
 																  "maxservers": None,
 																  "joinlock": False,
-																  "queuejoins": False}})
+																  "queuejoins": False, "first run": True,
+																  "git ver": str(subprocess.check_output(["git",
+																										  "rev-parse",
+																										  "HEAD"])).strip()
+																  }})
 			return await msg.edit(content="Fixed.")
 		except:
 			await msg.edit(content="Creating new file.")
-			x = write("./data.json", data={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
-																   "infractions": {},
-																   "newserverchannel": None,
-																   "serverleavechannel": None,
-																   "newservermessage": "Joined server {0.name}.",
-																   "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-																   "maxservers": None,
-																   "joinlock": False,
-																   "queuejoins": False}}, indent=2, rollback=False)
+			self.data = write("./guildmanager.data", {str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
+																			  "infractions": {},
+																			  "newserverchannel": None,
+																			  "serverleavechannel": None,
+																			  "newservermessage": "Joined server {0.name}.",
+																			  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+																			  "maxservers": None,
+																			  "joinlock": False,
+																			  "queuejoins": False, "first run": True,
+																			  "git ver": str(
+																				  subprocess.check_output(["git",
+																										   "rev-parse",
+																										   "HEAD"])).strip()
+																			  }})
 			await msg.edit(content=f"Fixed.")
 
 
