@@ -16,11 +16,11 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 SOFTWARE.
 """
 import asyncio
-import os
 import subprocess
 from datetime import datetime
 
 import discord
+import os
 from discord.ext import commands
 from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
@@ -78,8 +78,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		There are no restrictions, so you can use every flag if you want. However this would be very contradicting.
 		All flags are processed in the above order, starting with `--extended` to `--sort-by-bots`.
 		"""
-		if not self.data.get(str(ctx.bot.user.id)):
-			return await ctx.send(f"Error reading `data.json`. If it has been deleted or moved, please run "
+		if self.data.get(str(self.bot.user.id)) is None:
+			return await ctx.send(f"Error reading `guildmanager.data`. If it has been deleted or moved, please run "
 								  f"`{ctx.prefix}guildmanager repair`. If this does not work, you will have to"
 								  f" fresh-install the module.")
 		flags = [fl.lower() for fl in flags if fl.startswith("--")]
