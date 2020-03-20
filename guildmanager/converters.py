@@ -1,5 +1,44 @@
 import datetime
 
+from discord import Guild
+from discord.ext import commands
+
+
+class FuzzyGuild(commands.Converter):
+	"""Returns a guild based on ID, name, or owner ID
+
+	:returns discord.Guild:"""
+
+	async def convert(self, ctx: commands.Context, argument: str) -> Guild:
+		# stolen from my classic "DynamicGuild" Class some may have seen used before.
+		try:
+			argument = int(argument)
+		except:
+			pass
+		bot = ctx.bot
+		if isinstance(argument, int):
+			# check if its an ID first, else check enumerator
+			guild = bot.get_guild(argument)
+			if guild is not None:  # YAY
+				return guild
+			else:  # AWW
+				for number, guild in enumerate(bot.guilds, start=1):
+					if number == argument:
+						return guild
+				else:
+					if guild is None:
+						raise commands.BadArgument(f"Could not convert '{argument}' to 'Guild' with reason 'type None'")
+					else:
+						raise commands.BadArgument(f"Could not convert '{argument}' to 'Guild' as loop left.")
+		elif isinstance(argument, str):  # assume its a name
+			for guild in bot.guilds:
+				if guild.name.lower() == argument.lower():
+					return guild
+			else:
+				raise commands.BadArgument(f"Could not convert '{argument}' to 'Guild' with reason 'type None' at 1")
+		else:
+			raise commands.BadArgument(f"Could not convert argument of type '{type(argument)}' to 'Guild'")
+
 
 def ago_time(time):
 	"""Convert a time (datetime) to a human readable format.
