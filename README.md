@@ -23,8 +23,9 @@ It has many commands and features, some of which are listed below:
 The [documentation](https://docs.dragdev.xyz/gm) explains it all.
 
 ### supporting us
-You can join our [discord server](https://beta.dragdev.xyz/r/server.html) and motivate us. We don't take payments or donations unless you beg us to, which is 
-rather strange considering you would be begging to spend money.
+You can join our [discord server](https://beta.dragdev.xyz/r/server.html) and motivate us. ~~We don't take payments or donations unless you beg us to, which is 
+rather strange considering you would be begging to spend money.~~
+Turns out, we do accept payments. [click here](https://beta.dragdev.xyz/donate.html)
 
 ### FAQ:
 - Q: How do I make it so other users can run the guild manager's commands?
@@ -54,7 +55,3 @@ bot.load_extension("guildmanager")
 - [#1](https://github.com/dragdev-studios/guildmanager/issues/1) - Errors loading initially after install due to file issues [SOLVED]
 - [#2](https://github.com/dragdev-studios/guildmanager/issues/2) - Errors loading before bot is ready
 **Have an issue loading the cog?** [create a new issue](https://https://github.com/dragdev-studios/guildmanager/issues/new)
-
-### Fancy Badges:
-[![codebeat badge](https://codebeat.co/badges/7d5ba40c-c352-4451-8f1e-740fa4406fa7)](https://codebeat.co/projects/github-com-dragdev-studios-guildmanager-master)
-[![Python application](https://github.com/dragdev-studios/guildmanager/workflows/Python%20application/badge.svg)]
