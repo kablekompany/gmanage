@@ -26,6 +26,7 @@ from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
 
 from guildmanager import __version__
+from guildmanager.converters import FuzzyGuild
 from guildmanager.io import read, write
 
 
@@ -130,8 +131,34 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			else:
 				line = f"{n}. {guild.name}"
 				await paginator.add_line(line)
-		await ctx.send(embed=e, delete_after=60*30)
+		await ctx.send(embed=e, delete_after=60 * 30)
 		await paginator.send_to(ctx.channel)
+
+	@guilds_root.command()
+	async def ban(self, ctx: commands.Context, guild: FuzzyGuild(), *, reason: str = "No Reason."):
+		"""Bans a server from using the bot
+
+		Every time the bot joins a banned guild, it leaves it
+		If the bot finds it is in a server that is banned, usually when the guild gets an update, it will leave.
+		If guild is already banned, will unban it.
+
+		guild can be the server's ID, name, or enum ID (the number shown before the name in [p]guilds)"""
+		guild: discord.Guild  # linting
+		if self.data["bans"]["servers"].get(str(guild.id)):
+			await ctx.send(f"Unbanned {guild.name} (`{guild.id}`).", delete_after=30)
+			del self.data["bans"]["servers"][str(guild.id)]
+			write("./guildmanager.data", self.data, rollback=True)
+		else:
+			m = await ctx.send(f"Banning {guild.name} (`{guild.id}`) for reason {reason[:1700]}...")
+			try:
+				await guild.owner.send(f"Your guild **{guild.name}** Has been banned from using this bot, with reason:"
+									   f"\n{reason[:1700]}.")
+			except discord.Forbidden:
+				pass
+			finally:
+				await guild.leave()
+				write("./guildmanager.data", data=self.data, rollback=True)
+				return await m.edit(content=f"Banned {guild.name}.")
 
 	@commands.Cog.listener(name="on_guild_join")
 	@commands.Cog.listener(name="on_guild_update")
@@ -173,7 +200,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			color=discord.Color.blue(),
 			timestamp=since
 		)
-		if float(__version__[1:3]) > 3.3:
+		if float(str(__version__[1:3])) > 3.3:
 			try:
 				cur = self.data["git ver"]
 
