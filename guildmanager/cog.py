@@ -149,7 +149,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			del self.data["bans"]["servers"][str(guild.id)]
 			write("./guildmanager.data", self.data, rollback=True)
 		else:
-			m = await ctx.send(f"Banning {guild.name} (`{guild.id}`) for reason {reason[:1700]}...")
+			m = await ctx.send(f"Banning {guild.name} (`{guild.id}`) for reason {reason[:1700]}...", delete_after=30)
 			try:
 				await guild.owner.send(f"Your guild **{guild.name}** Has been banned from using this bot, with reason:"
 									   f"\n{reason[:1700]}.")
