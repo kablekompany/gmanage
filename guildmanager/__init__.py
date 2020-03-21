@@ -15,7 +15,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-__version__ = "0.3.6"
+__version__ = "0.3.7"
 from guildmanager.cog import GMcog as GuildManager
 from guildmanager.cog import setup as _setup
 
