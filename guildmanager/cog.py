@@ -103,19 +103,20 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			guilds = list(sorted(guilds, key=lambda g: g.name))
 		e = discord.Embed(
 			title=f"Guilds: {len(guilds)}",
-			description=f"New server join notification channel: "
-						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel']))}\nNew server "
-						f"notification:"
-						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel'])).format(ctx.guild)}"
-						f"\nserver leave notification channel: "
-						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['serverleavechannel']))}\nServer leave"
-						f" notification: "
-						f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['leaveservermessage']))}\n"
-						f"Guild cap: {self.data[str(self.bot.user.id)]['maxservers']}\n"
-						f"join lock: {self.data[str(self.bot.user.id)]['joinlock']}\n"
-						f"join queue: {self.data[str(self.bot.user.id)]['queuejoins']}\n",
 			color=discord.Color.blurple()
 		)
+		e.add_field(name="Cog Settings:", value=f"New server join notification channel: "
+												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel']))}\nNew server "
+												f"notification:"
+												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel'])).format(ctx.guild)}"
+												f"\nserver leave notification channel: "
+												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['serverleavechannel']))}\nServer leave"
+												f" notification: "
+												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['leaveservermessage']))}\n"
+												f"Guild cap: {self.data[str(self.bot.user.id)]['maxservers']}\n"
+												f"join lock: {self.data[str(self.bot.user.id)]['joinlock']}\n"
+												f"join queue: {self.data[str(self.bot.user.id)]['queuejoins']}\n",
+					inline=False)
 		e.add_field(name="Most recently joined guild:",
 					value=list(sorted(guilds, key=lambda g: g.me.joined_at, reverse=True))[0].name)
 		e.add_field(name="Most recently created server:",
@@ -123,7 +124,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		e.add_field(name="Largest guild:",
 					value=list(sorted(guilds, key=lambda g: g.member_count, reverse=True))[0].name)
 		paginator = PEI if not extended else PI
-		paginator = paginator(self.bot, commands.Paginator(prefix="```py", max_size=1950))
+		paginator = paginator(self.bot, commands.Paginator(prefix="```py", max_size=1950), embed=e)
 		for n, guild in enumerate(guilds, start=1):
 			if extended:
 				line = f"{n}. {guild.name} ({guild.id}) [{guild.owner} | {guild.owner_id}]"
@@ -131,7 +132,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			else:
 				line = f"{n}. {guild.name}"
 				await paginator.add_line(line)
-		await ctx.send(embed=e, delete_after=60 * 30)
+		# await ctx.send(embed=e, delete_after=60 * 30)
 		await paginator.send_to(ctx.channel)
 
 	@guilds_root.command()
