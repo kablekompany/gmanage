@@ -45,10 +45,17 @@ python3 -m pip install git+https://github.com/dragdev-studios/guildmanager
 
 # Windows
 pip install git+https://github.com/dragdev-studios/guildmanager
+
+-- updating --
+# UNIX-based systems, like macos and linux distros:
+python3 -m pip install git+https://github.com/dragdev-studios/guildmanager --upgrade
+
+# Windows
+pip install git+https://github.com/dragdev-studios/guildmanager --upgrade
 ```
 ## quick load
 ```
-bot.load_extension("guildmanager")
+bot.load_extension("guildmanager.cog")
 ```
 
 ## Known issues loading:
