@@ -16,11 +16,11 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 SOFTWARE.
 """
 import asyncio
+import os
 import subprocess
 from datetime import datetime
 
 import discord
-import os
 from discord.ext import commands
 from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
@@ -201,7 +201,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			color=discord.Color.blue(),
 			timestamp=since
 		)
-		if float(str(__version__[1:3])) > 3.3:
+		if float(str(__version__)[3:5]) > 3.3:
 			try:
 				cur = self.data["git ver"]
 
