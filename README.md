@@ -16,7 +16,7 @@ It has many commands and features, some of which are listed below:
   - suspicious server alerts
   - works per bot instance
   
- Much more will be coming as time moves on. Don't forge to keep the module updated!
+ Much more will be coming as time moves on. Don't forget to keep the module updated!
  
 
 #### How do I use this?
