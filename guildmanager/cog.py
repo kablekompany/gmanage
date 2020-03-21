@@ -34,22 +34,23 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 	"""Guild Management (GM for short) is a module and cog that is used for managing a bot's guilds.
 
 	Read about it at the readme: https://github.com/dragdev-studios/guildmanager/blob/master/README.md"""
-	def __init__(self, bot):
+
+	def __init__(self, bot: commands.Bot):
 		self.bot = bot
 		self.data = read("./guildmanager.data", create_new=True,
-						 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
-															  "infractions": {},
-															  "newserverchannel": None,
-															  "serverleavechannel": None,
-															  "newservermessage": "Joined server {0.name}.",
-															  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-															  "maxservers": None,
-															  "joinlock": False,
-															  "queuejoins": False, "first run": True,
-															  "git ver": str(subprocess.check_output(["git",
-																									  "rev-parse",
-																									  "HEAD"])).strip()
-															  }})
+						 default_new={"bans": {"users": [], "servers": {}},
+									  "infractions": {},
+									  "newserverchannel": None,
+									  "serverleavechannel": None,
+									  "newservermessage": "Joined server {0.name}.",
+									  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+									  "maxservers": None,
+									  "joinlock": False,
+									  "queuejoins": False, "first run": True,
+									  "git ver": str(subprocess.check_output(["git",
+																			  "rev-parse",
+																			  "HEAD"])).strip()
+									  })
 
 	def cog_unload(self):
 		write("./guildmanager.data", self.data, indent=2, rollback=True)
@@ -79,10 +80,6 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		There are no restrictions, so you can use every flag if you want. However this would be very contradicting.
 		All flags are processed in the above order, starting with `--extended` to `--sort-by-bots`.
 		"""
-		if self.data.get(str(self.bot.user.id)) is None:
-			return await ctx.send(f"Error reading `guildmanager.data`. If it has been deleted or moved, please run "
-								  f"`{ctx.prefix}guildmanager repair`. If this does not work, you will have to"
-								  f" fresh-install the module.")
 		flags = [fl.lower() for fl in flags if fl.startswith("--")]
 		guilds = self.bot.guilds
 		extended = "--extended" in flags or "-e" in flags
@@ -106,16 +103,16 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			color=discord.Color.blurple()
 		)
 		e.add_field(name="Cog Settings:", value=f"New server join notification channel: "
-												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel']))}\nNew server "
+												f"{str(self.bot.get_channel(self.data['newserverchannel']))}\nNew server "
 												f"notification:"
-												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['newserverchannel'])).format(ctx.guild)}"
+												f"{str(self.bot.get_channel(self.data['newserverchannel'])).format(ctx.guild)}"
 												f"\nserver leave notification channel: "
-												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['serverleavechannel']))}\nServer leave"
+												f"{str(self.bot.get_channel(self.data['serverleavechannel']))}\nServer leave"
 												f" notification: "
-												f"{str(self.bot.get_channel(self.data[str(self.bot.user.id)]['leaveservermessage']))}\n"
-												f"Guild cap: {self.data[str(self.bot.user.id)]['maxservers']}\n"
-												f"join lock: {self.data[str(self.bot.user.id)]['joinlock']}\n"
-												f"join queue: {self.data[str(self.bot.user.id)]['queuejoins']}\n",
+												f"{str(self.bot.get_channel(self.data['leaveservermessage']))}\n"
+												f"Guild cap: {self.data['maxservers']}\n"
+												f"join lock: {self.data['joinlock']}\n"
+												f"join queue: {self.data['queuejoins']}\n",
 					inline=False)
 		e.add_field(name="Most recently joined guild:",
 					value=list(sorted(guilds, key=lambda g: g.me.joined_at, reverse=True))[0].name)
@@ -248,36 +245,36 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		msg = await ctx.send(f"Attempting to write default data...")
 		try:
 			self.data = read("./guildmanager.data", create_new=True,
-							 default_new={str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
-																  "infractions": {},
-																  "newserverchannel": None,
-																  "serverleavechannel": None,
-																  "newservermessage": "Joined server {0.name}.",
-																  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-																  "maxservers": None,
-																  "joinlock": False,
-																  "queuejoins": False, "first run": True,
-																  "git ver": str(subprocess.check_output(["git",
-																										  "rev-parse",
-																										  "HEAD"])).strip()
-																  }})
+							 default_new={"bans": {"users": [], "servers": {}},
+										  "infractions": {},
+										  "newserverchannel": None,
+										  "serverleavechannel": None,
+										  "newservermessage": "Joined server {0.name}.",
+										  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+										  "maxservers": None,
+										  "joinlock": False,
+										  "queuejoins": False, "first run": True,
+										  "git ver": str(subprocess.check_output(["git",
+																				  "rev-parse",
+																				  "HEAD"])).strip()
+										  })
 			return await msg.edit(content="Fixed.")
 		except:
 			await msg.edit(content="Creating new file.")
-			self.data = write("./guildmanager.data", {str(self.bot.user.id): {"bans": {"users": [], "servers": {}},
-																			  "infractions": {},
-																			  "newserverchannel": None,
-																			  "serverleavechannel": None,
-																			  "newservermessage": "Joined server {0.name}.",
-																			  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-																			  "maxservers": None,
-																			  "joinlock": False,
-																			  "queuejoins": False, "first run": True,
-																			  "git ver": str(
-																				  subprocess.check_output(["git",
-																										   "rev-parse",
-																										   "HEAD"])).strip()
-																			  }})
+			self.data = write("./guildmanager.data", {"bans": {"users": [], "servers": {}},
+													  "infractions": {},
+													  "newserverchannel": None,
+													  "serverleavechannel": None,
+													  "newservermessage": "Joined server {0.name}.",
+													  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+													  "maxservers": None,
+													  "joinlock": False,
+													  "queuejoins": False, "first run": True,
+													  "git ver": str(
+														  subprocess.check_output(["git",
+																				   "rev-parse",
+																				   "HEAD"])).strip()
+													  })
 			await msg.edit(content=f"Fixed.")
 
 
