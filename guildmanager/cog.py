@@ -177,12 +177,16 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			for channel in guild.channels:
 				try:
 					if channel.permissions_for(guild.me).create_instant_invite:
-						i = await channel.create_invite(
-							max_age=120,
-							max_uses=5,
-							reason=f"{ctx.prefix}guilds invite {guild.name} used by my owner to generate an invite."
-						)
-						return await ctx.send(f"2 minute invite: {i.url}", delete_after=60)
+						try:
+							i = await channel.create_invite(
+								max_age=120,
+								max_uses=5,
+								reason=f"{ctx.prefix}guilds invite {guild.name} used by my owner to generate an invite."
+							)
+						except discord.NotFound:
+							continue
+						else:
+							return await ctx.send(f"2 minute invite: {i.url}", delete_after=60)
 				except (discord.NotFound, discord.Forbidden):
 					continue
 			else:
