@@ -150,13 +150,45 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			m = await ctx.send(f"Banning {guild.name} (`{guild.id}`) for reason {reason[:1700]}...", delete_after=30)
 			try:
 				await guild.owner.send(f"Your guild **{guild.name}** Has been banned from using this bot, with reason:"
-									   f"\n{reason[:1700]}.")
+				                       f"\n{reason[:1700]}.")
 			except discord.Forbidden:
 				pass
 			finally:
 				await guild.leave()
 				write("./guildmanager.data", data=self.data, rollback=True)
 				return await m.edit(content=f"Banned {guild.name}.")
+
+	@guilds_root.command(name="invite")
+	async def guilds_invite(self, ctx: commands.Context, *, guild: FuzzyGuild()):
+		"""Returns an invite to specified Guild.
+
+		Tries to get invites currently available. If it fails to, it will simply try and create one."""
+		guild: discord.Guild
+		if "VANITY_URL" in guild.features:
+			i = await guild.vanity_invite()
+			return await ctx.send(f"Vanity Invite: <{i.url}>", delete_after=10)
+		if guild.me.guild_permissions.manage_guild:
+			invites = await guild.invites()
+			return await ctx.send(f"Invite: <{invites[0].url}>", delete_after=10)
+		else:
+			for channel in guild.channels:
+				if channel.permissions_for(guild.me).create_instant_invite:
+					i = await channel.create_invite(
+						max_age=120,
+						max_uses=5,
+						reason=f"{ctx.prefix}guilds invite {guild.name} used by my owner to generate an invite."
+					)
+					return await ctx.send(f"2 minute invite: {i.url}", delete_after=60)
+			else:
+				return await ctx.send(f"Unable to get or generate an invite (missing permissions).", delete_after=10)
+
+	@guilds_root.command(name="leave")
+	async def guilds_leave(self, ctx: commands.Context, *, guild: FuzzyGuild() = None):
+		"""Leaves a guild. Just that.
+		Leave guild blank to default to this guild."""
+		guild = guild or ctx.guild
+		await guild.leave()
+		await ctx.author.send(f"Left guild {guild.name}.")
 
 	@commands.Cog.listener(name="on_guild_join")
 	@commands.Cog.listener(name="on_guild_update")
@@ -272,10 +304,16 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 													  "queuejoins": False, "first run": True,
 													  "git ver": str(
 														  subprocess.check_output(["git",
-																				   "rev-parse",
-																				   "HEAD"])).strip()
-													  })
+														                           "rev-parse",
+														                           "HEAD"])).strip()
+			                                          })
 			await msg.edit(content=f"Fixed.")
+
+	@commands.Cog.listener(name="on_command_completion")
+	async def del_our_msgs(self, ctx: commands.Context):
+		if ctx.command.cog.qualified_name == "Guild Management Cog":
+			if ctx.channel.permissions_for(ctx.me).manage_messages:
+				await ctx.message.delete(delay=60)
 
 
 def setup(bot):
