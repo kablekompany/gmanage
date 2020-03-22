@@ -327,6 +327,6 @@ def setup(bot):
 				bot.remove_command(alias)
 		bot.add_cog(GMcog(bot))
 	except TypeError as error:
-		raise commands.ExtensionNotLoaded from error
+		raise commands.ExtensionNotLoaded("guildmanager.cog") from error
 	except Exception as unknownerror:
 		raise commands.ExtensionError from unknownerror
