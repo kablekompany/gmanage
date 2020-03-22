@@ -256,7 +256,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 	@gmroot.command(name="update")
 	async def gm_update(self, ctx: commands.Context):
 		"""[optionally force] updates the module automatically."""
-		self.data["git ver"] = str(subprocess.check_output(["git", "rev-parse", "HEAD"])).encode("utf-8")
+		self.data["git ver"] = str(subprocess.run(["git", "rev-parse", "HEAD"])).encode("utf-8")
 		await ctx.message.delete(delay=30)
 		url = "https://github.com/dragdev-studios/guildmanager"
 		cmd = "python -m pip install git+{url} --upgrade --user"
