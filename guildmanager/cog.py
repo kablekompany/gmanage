@@ -76,6 +76,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		  * `--sort-by-created-oldest`: inverse of recent.
 		  * `--sort-by-members`: Sorts by member count, largest to smallest.
 		  * `--sort-by-bots`: Sorts by bot count, most to least.
+		  * `--sort-to-enum`: Sorts to default order, so you can use their enum IDs in commands like guilds invite <num>
 		Flags do stack, so you can do things like `[p]guilds --extended --sort-by-bots --sort-by-recent`
 		There are no restrictions, so you can use every flag if you want. However this would be very contradicting.
 		All flags are processed in the above order, starting with `--extended` to `--sort-by-bots`.
@@ -96,6 +97,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				guilds = list(sorted(guilds, key=lambda g: g.member_count, reverse=True))
 			if "--sort-by-bots" in flags or "-sbb" in flags:
 				guilds = list(sorted(guilds, key=lambda g: len([m for m in g.members if m.bot]), reverse=True))
+			if "--sort-to-enum" in flags or "-ste" in flags:
+				guilds = self.bot.guilds
 		else:
 			guilds = list(sorted(guilds, key=lambda g: g.name))
 		e = discord.Embed(
