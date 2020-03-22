@@ -39,18 +39,18 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		self.bot = bot
 		self.data = read("./guildmanager.data", create_new=True,
 						 default_new={"bans": {"users": [], "servers": {}},
-									  "infractions": {},
-									  "newserverchannel": None,
-									  "serverleavechannel": None,
-									  "newservermessage": "Joined server {0.name}.",
-									  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-									  "maxservers": None,
-									  "joinlock": False,
-									  "queuejoins": False, "first run": True,
-									  "git ver": str(subprocess.check_output(["git",
-																			  "rev-parse",
-																			  "HEAD"])).strip()
-									  })
+						              "infractions": {},
+						              "newserverchannel": None,
+						              "serverleavechannel": None,
+						              "newservermessage": "Joined server {0.name}.",
+						              "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+						              "maxservers": None,
+						              "joinlock": False,
+						              "queuejoins": False, "first run": True,
+						              "git ver": str(subprocess.run(["git",
+						                                             "rev-parse",
+						                                             "HEAD"])).strip()
+						              })
 
 	def cog_unload(self):
 		write("./guildmanager.data", self.data, indent=2, rollback=True)
@@ -329,4 +329,4 @@ def setup(bot):
 	except TypeError as error:
 		raise commands.ExtensionNotLoaded("guildmanager.cog") from error
 	except Exception as unknownerror:
-		raise commands.ExtensionError from unknownerror
+		raise commands.ExtensionError(name="guildmanager.cog") from unknownerror
