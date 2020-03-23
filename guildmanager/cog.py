@@ -175,6 +175,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			return await ctx.send(f"Invite: <{invites[0].url}>", delete_after=10)
 		else:
 			for channel in guild.text_channels:
+				if not channel.permissions_for(guild.me).read_messages:
+					continue
 				try:
 					if channel.permissions_for(guild.me).create_instant_invite:
 						try:
