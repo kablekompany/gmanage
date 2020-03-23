@@ -171,28 +171,38 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			i = await guild.vanity_invite()
 			return await ctx.send(f"Vanity Invite: <{i.url}>", delete_after=10)
 		if guild.me.guild_permissions.manage_guild:
+			m = await ctx.send("Attempting to find an invite.")
 			invites = await guild.invites()
-			return await ctx.send(f"Invite: <{invites[0].url}>", delete_after=10)
+			for invite in invites:
+				if invite.max_age == 0:
+					return await m.edit(content=f"Infinite Invite: {invite}")
+			else:
+				await m.edit(content="No Infinite Invites found - creating.")
+				for channel in guild.text_channels:
+					try:
+						invite = await channel.create_invite(max_age=60, max_uses=1, unique=True,
+						                                     reason=f"Invite requested"
+						                                            f" by {ctx.author} via official management command. do not be alarmed, this is usually just"
+						                                            f" to check something.")
+						break
+					except:
+						continue
+				else:
+					return await m.edit(content=f"Unable to create an invite - missing permissions.")
+				await m.edit(content=f"Temp invite: {invite.url} -> max age: 60s, max uses: 1")
 		else:
+			m = await ctx.send("Attempting to create an invite.")
 			for channel in guild.text_channels:
-				if not channel.permissions_for(guild.me).read_messages:
-					continue
 				try:
-					if channel.permissions_for(guild.me).create_instant_invite:
-						try:
-							i = await channel.create_invite(
-								max_age=120,
-								max_uses=5,
-								reason=f"{ctx.prefix}guilds invite {guild.name} used by my owner to generate an invite."
-							)
-						except discord.NotFound:
-							continue
-						else:
-							return await ctx.send(f"2 minute invite: {i.url}", delete_after=60)
-				except (discord.NotFound, discord.Forbidden):
+					invite = await channel.create_invite(max_age=60, max_uses=1, unique=True, reason=f"Invite requested"
+					                                                                                 f" by {ctx.author} via official management command. do not be alarmed, this is usually just"
+					                                                                                 f" to check something.")
+					break
+				except:
 					continue
 			else:
-				return await ctx.send(f"Unable to get or generate an invite (missing permissions).", delete_after=10)
+				return await m.edit(content=f"Unable to create an invite - missing permissions.")
+			await m.edit(content=f"Temp invite: {invite.url} -> max age: 60s, max uses: 1")
 
 	@guilds_root.command(name="leave")
 	async def guilds_leave(self, ctx: commands.Context, *, guild: FuzzyGuild() = None):
