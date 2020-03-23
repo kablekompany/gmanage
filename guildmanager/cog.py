@@ -105,18 +105,21 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			title=f"Guilds: {len(guilds)}",
 			color=discord.Color.blurple()
 		)
-		e.add_field(name="Cog Settings:", value=f"New server join notification channel: "
-												f"{str(self.bot.get_channel(self.data['newserverchannel']))}\nNew server "
-												f"notification:"
-												f"{str(self.bot.get_channel(self.data['newserverchannel'])).format(ctx.guild)}"
-												f"\nserver leave notification channel: "
-												f"{str(self.bot.get_channel(self.data['serverleavechannel']))}\nServer leave"
-												f" notification: "
-												f"{str(self.bot.get_channel(self.data['leaveservermessage']))}\n"
-												f"Guild cap: {self.data['maxservers']}\n"
-												f"join lock: {self.data['joinlock']}\n"
-												f"join queue: {self.data['queuejoins']}\n",
-					inline=False)
+		try:
+			e.add_field(name="Cog Settings:", value=f"New server join notification channel: "
+			                                        f"{str(self.bot.get_channel(self.data['newserverchannel']))}\nNew server "
+			                                        f"notification:"
+			                                        f"{str(self.bot.get_channel(self.data['newserverchannel'])).format(ctx.guild)}"
+			                                        f"\nserver leave notification channel: "
+			                                        f"{str(self.bot.get_channel(self.data['serverleavechannel']))}\nServer leave"
+			                                        f" notification: "
+			                                        f"{str(self.bot.get_channel(self.data['leaveservermessage']))}\n"
+			                                        f"Guild cap: {self.data['maxservers']}\n"
+			                                        f"join lock: {self.data['joinlock']}\n"
+			                                        f"join queue: {self.data['queuejoins']}\n",
+			            inline=False)
+		except KeyError:
+			pass
 		e.add_field(name="Most recently joined guild:",
 					value=list(sorted(guilds, key=lambda g: g.me.joined_at, reverse=True))[0].name)
 		e.add_field(name="Most recently created server:",
