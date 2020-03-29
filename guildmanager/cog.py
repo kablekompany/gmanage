@@ -227,8 +227,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		"""
 		# we leave `extra` there for on_guild_update, where we dont really need it. And to prevent Missing arg errors,
 		# we make it optional
-		if str(guild.id) in self.data[str(guild.me.id)]["bans"]["servers"].keys():
-			reason = self.data[str(guild.me.id)]["bans"]["servers"][str(guild.id)]
+		if str(guild.id) in self.data["bans"]["servers"].keys():
+			reason = self.data["bans"]["servers"][str(guild.id)]
 			try:
 				await guild.owner.send(
 					f"Your guild, **{guild.name}** has been banned from using this bot (with the reason '{reason}'.). Contact a developer"
