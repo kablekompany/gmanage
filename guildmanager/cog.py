@@ -242,7 +242,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		"""Lists all mutual guilds you have with :user:
 		if user is a guild, it will default to the guild's owner."""
 		user = user if isinstance(user, discord.User) else user.owner
-		guilds = [g for g in self.bot.guilds if g.get_user(user.id)]
+		guilds = [g for g in self.bot.guilds if g.get_member(user.id)]
 		e = discord.Embed(
 			title=f"Mutual guilds: {len(guilds)}",
 			color=discord.Color.blue()
