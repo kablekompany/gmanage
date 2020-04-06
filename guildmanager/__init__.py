@@ -31,3 +31,4 @@ def setup(bot):
 		_setup(bot)
 	except Exception as e:
 		print(f"Error while loading GuildManager. Not loaded.", e)
+		raise e
