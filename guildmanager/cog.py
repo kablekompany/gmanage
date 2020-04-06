@@ -293,6 +293,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		"""[optionally force] updates the module automatically."""
 		self.data["git ver"] = str(subprocess.run(["git", "rev-parse", "HEAD"])).encode("utf-8")
 		await ctx.message.delete(delay=30)
+		await ctx.channel.trigger_typing()
 		url = "https://github.com/dragdev-studios/guildmanager"
 		cmd = f"python -m pip install git+{url} --upgrade --user"
 		res = os.system(cmd)
