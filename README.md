@@ -1,3 +1,4 @@
+![Python package](https://github.com/dragdev-studios/guildmanager/workflows/Python%20package/badge.svg)
 # guildmanager
 Simple and easy guild management for python discord bots!
 
@@ -59,6 +60,7 @@ bot.load_extension("guildmanager.cog")
 ```
 
 ## Known issues loading:
+* Please read the wiki before loading, mainly [this page](https://github.com/dragdev-studios/guildmanager/wiki/Loading-before-bot-is-ready%3F)
 - [#1](https://github.com/dragdev-studios/guildmanager/issues/1) - Errors loading initially after install due to file issues [SOLVED]
 - [#2](https://github.com/dragdev-studios/guildmanager/issues/2) - Errors loading before bot is ready
 - [#9](https://github.com/dragdev-studios/guildmanager/issues/9) **OR** json.JSONdecodeError - an error occured during first load, to fix it all you need to do is delete the `guildmanager.data` file that is created in your active directory
