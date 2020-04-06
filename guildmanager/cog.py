@@ -19,6 +19,7 @@ import asyncio
 import os
 import subprocess
 from datetime import datetime
+from typing import Union
 
 import discord
 from discord.ext import commands
@@ -235,6 +236,21 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 					" to see if you can appeal this.")
 			except discord.Forbidden:
 				pass
+
+	@guilds_root.command(name="mutual")
+	async def mutual_guilds(self, ctx: commands.Context, *, user: Union[discord.User, FuzzyGuild]):
+		"""Lists all mutual guilds you have with :user:
+		if user is a guild, it will default to the guild's owner."""
+		user = user if isinstance(user, discord.User) else user.owner
+		guilds = [g for g in self.bot.guilds if g.get_user(user.id)]
+		e = discord.Embed(
+			title=f"Mutual guilds: {len(guilds)}",
+			color=discord.Color.blue()
+		)
+		paginator = PEI(self.bot, commands.Paginator(prefix="```md", max_size=1900), embed=e)
+		for guild in guilds:
+			await paginator.add_line(f"• {guild.name} ({guild.id})")
+		await paginator.send_to(ctx.channel)
 
 	@commands.group(name="guildmanager", invoke_without_command=True, aliases=['gmeta', 'gman', 'gmd'])
 	async def gmroot(self, ctx: commands.Context):
