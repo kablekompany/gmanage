@@ -49,9 +49,6 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 						              "maxservers": None,
 						              "joinlock": False,
 						              "queuejoins": False, "first run": True,
-						              "git ver": str(subprocess.run(["git",
-						                                             "rev-parse",
-						                                             "HEAD"])).strip()
 						              })
 
 	def cog_unload(self):
@@ -260,39 +257,18 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		without a subcommand this returns basic information.
 		"""
 		since = datetime(2020, 3, 15, 23, 50, 34, 0)
-		try:
-			last_commit = str(subprocess.check_output(["git", "rev-parse", "HEAD"]))
-		except FileNotFoundError as fnfe:
-			return await ctx.send(
-				f"Unable to get last version - git is not installed. Unless you directly installed the"
-				f" module or removed git recently, this error should __never__ raise.")
 		e = discord.Embed(
-			title=f"GuildManager - version {__version__} [commit {str(last_commit[:7]).encode('utf-8')}]",
+			title=f"GuildManager - version {__version__}",
 			description=f"You seem lost. Try `{ctx.prefix}help {ctx.command.qualified_name}`.",
 			color=discord.Color.blue(),
 			timestamp=since
 		)
-		if float(str(__version__)[3:5]) > 3.3:
-			try:
-				cur = self.data["git ver"]
-
-				if cur != last_commit:
-					footer = f"Your module is out of date! Commit {last_commit[:7]} is available, and you're on {self.data['git ver']}."
-				else:
-					footer = f"Your module is up to date!"
-			except KeyError:
-				footer = f"Unable to determine if module is up to date because " \
-						 f"`guildmanager.data` file lacks the `git ver` key. Please fix this, re-installing the module" \
-						 f" will help."
-		else:
-			footer = f"Your module is out of date, and the git hash could not be determined."
-		e.set_footer(text=footer + " | Live since ")
+		e.set_footer(text="Live since ")
 		await ctx.send(embed=e)
 
 	@gmroot.command(name="update")
 	async def gm_update(self, ctx: commands.Context):
 		"""[optionally force] updates the module automatically."""
-		self.data["git ver"] = str(subprocess.run(["git", "rev-parse", "HEAD"])).encode("utf-8")
 		await ctx.message.delete(delay=30)
 		await ctx.channel.trigger_typing()
 		url = "https://github.com/dragdev-studios/guildmanager"
@@ -321,34 +297,27 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		try:
 			self.data = read("./guildmanager.data", create_new=True,
 							 default_new={"bans": {"users": [], "servers": {}},
-										  "infractions": {},
-										  "newserverchannel": None,
-										  "serverleavechannel": None,
-										  "newservermessage": "Joined server {0.name}.",
-										  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-										  "maxservers": None,
-										  "joinlock": False,
-										  "queuejoins": False, "first run": True,
-										  "git ver": str(subprocess.check_output(["git",
-																				  "rev-parse",
-																				  "HEAD"])).strip()
-										  })
+							              "infractions": {},
+							              "newserverchannel": None,
+							              "serverleavechannel": None,
+							              "newservermessage": "Joined server {0.name}.",
+							              "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+							              "maxservers": None,
+							              "joinlock": False,
+							              "queuejoins": False, "first run": True
+							              })
 			return await msg.edit(content="Fixed.")
 		except:
 			await msg.edit(content="Creating new file.")
 			self.data = write("./guildmanager.data", {"bans": {"users": [], "servers": {}},
-													  "infractions": {},
-													  "newserverchannel": None,
-													  "serverleavechannel": None,
-													  "newservermessage": "Joined server {0.name}.",
-													  "leaveservermessage": "Left server {0.name} (`{0.id}`).",
-													  "maxservers": None,
-													  "joinlock": False,
-													  "queuejoins": False, "first run": True,
-													  "git ver": str(
-														  subprocess.check_output(["git",
-														                           "rev-parse",
-														                           "HEAD"])).strip()
+			                                          "infractions": {},
+			                                          "newserverchannel": None,
+			                                          "serverleavechannel": None,
+			                                          "newservermessage": "Joined server {0.name}.",
+			                                          "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+			                                          "maxservers": None,
+			                                          "joinlock": False,
+			                                          "queuejoins": False, "first run": True
 			                                          })
 			await msg.edit(content=f"Fixed.")
 
