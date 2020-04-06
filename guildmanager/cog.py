@@ -16,6 +16,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 SOFTWARE.
 """
 import asyncio
+import json
 import os
 import subprocess
 from datetime import datetime
@@ -371,6 +372,22 @@ def setup(bot: commands.Bot):
 				for alias in cmd.aliases:
 					bot.remove_command(alias)
 			bot.add_cog(GMcog(bot))
+		except json.JSONDecodeError:
+			write("./guildmanager.data", {"bans": {"users": [], "servers": {}},
+			                              "infractions": {},
+			                              "newserverchannel": None,
+			                              "serverleavechannel": None,
+			                              "newservermessage": "Joined server {0.name}.",
+			                              "leaveservermessage": "Left server {0.name} (`{0.id}`).",
+			                              "maxservers": None,
+			                              "joinlock": False,
+			                              "queuejoins": False, "first run": True,
+			                              "git ver": str(
+				                              subprocess.check_output(["git",
+				                                                       "rev-parse",
+				                                                       "HEAD"])).strip()
+			                              })
+			setup(bot)
 		except TypeError as error:
 			raise commands.ExtensionNotLoaded("guildmanager.cog") from error
 		except Exception as unknownerror:
