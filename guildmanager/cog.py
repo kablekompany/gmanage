@@ -374,4 +374,4 @@ def setup(bot: commands.Bot):
 		except TypeError as error:
 			raise commands.ExtensionNotLoaded("guildmanager.cog") from error
 		except Exception as unknownerror:
-			raise commands.ExtensionError(name="guildmanager.cog") from unknownerror
+			raise commands.ExtensionError(name="guildmanager.cog", unknownerror) from unknownerror
