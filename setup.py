@@ -26,7 +26,7 @@ with open("./README.md") as a:
 	AM = a.read()
 
 with open("./requirements.txt") as m:
-	THE = m.readlines()  # readlines instead of read().split("\n") because fuck .split
+	THE = m.readlines()  # readlines instead of read().split("\n") because f*ck .split
 
 with open("./classifiers.txt") as t:
 	SENATE = t.readlines()
