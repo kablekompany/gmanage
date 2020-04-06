@@ -344,14 +344,17 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				await ctx.message.delete(delay=60)
 
 
-def setup(bot):
-	try:
-		for cmd in set(GMcog(bot).walk_commands()):
-			bot.remove_command(cmd.name)
-			for alias in cmd.aliases:
-				bot.remove_command(alias)
-		bot.add_cog(GMcog(bot))
-	except TypeError as error:
-		raise commands.ExtensionNotLoaded("guildmanager.cog") from error
-	except Exception as unknownerror:
-		raise commands.ExtensionError(name="guildmanager.cog") from unknownerror
+def setup(bot: commands.Bot):
+	if not bot.is_ready():
+		print("Unable to load GuildManager - bot's cache is not ready, and thus would cause issues loading.")
+	else:
+		try:
+			for cmd in set(GMcog(bot).walk_commands()):
+				bot.remove_command(cmd.name)
+				for alias in cmd.aliases:
+					bot.remove_command(alias)
+			bot.add_cog(GMcog(bot))
+		except TypeError as error:
+			raise commands.ExtensionNotLoaded("guildmanager.cog") from error
+		except Exception as unknownerror:
+			raise commands.ExtensionError(name="guildmanager.cog") from unknownerror
