@@ -306,9 +306,9 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				self.bot.reload_extension("guildmanager.cog")
 			except Exception as e:
 				await ctx.send(f"Error reloading updated module: `{str(e)}`. Traceback has been raised. If this issue"
-							   f" persists, please open an issue at {url}/issues/new.\n\nSee: "
-							   f"<{url}/issues/6>", delete_after=30)
-				raise commands.ExtensionFailed from e
+				               f" persists, please open an issue at {url}/issues/new.\n\nSee: "
+				               f"<{url}/issues/6>", delete_after=30)
+				raise commands.ExtensionFailed("guildmanager", e) from e
 			else:
 				return await ctx.send(f"Successfully reloaded.", delete_after=10)
 
