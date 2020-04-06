@@ -337,8 +337,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 	@commands.Cog.listener(name="on_command_completion")
 	async def del_our_msgs(self, ctx: commands.Context):
 		if (
-			ctx.command.cog.qualified_name is not None 
-			and ctx.command.cog.qualified_name == "Guild Management Cog"
+				ctx.command.cog is not None
+				and ctx.command.cog.qualified_name == "Guild Management Cog"
 		):
 			if ctx.channel.permissions_for(ctx.me).manage_messages:
 				await ctx.message.delete(delay=60)
