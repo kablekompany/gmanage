@@ -278,7 +278,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		self.data["git ver"] = str(subprocess.run(["git", "rev-parse", "HEAD"])).encode("utf-8")
 		await ctx.message.delete(delay=30)
 		url = "https://github.com/dragdev-studios/guildmanager"
-		cmd = "python -m pip install git+{url} --upgrade --user"
+		cmd = f"python -m pip install git+{url} --upgrade --user"
 		res = os.system(cmd)
 		if res not in [0, 256]:
 			return await ctx.send(
