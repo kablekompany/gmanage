@@ -28,7 +28,7 @@ from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
 from matplotlib import pyplot as plt
 
-from guildmanager import __version__
+from guildmanager import __version__, __last_update__
 from guildmanager.converters import FuzzyGuild
 from guildmanager.io import read, write
 
@@ -330,9 +330,10 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		without a subcommand this returns basic information.
 		"""
 		since = datetime(2020, 3, 15, 23, 50, 34, 0)
+		last_update = __last_update__
 		e = discord.Embed(
 			title=f"GuildManager - version {__version__}",
-			description=f"You seem lost. Try `{ctx.prefix}help {ctx.command.qualified_name}`.",
+			description=f"Last Updated: {str(last_update)}\nYou seem lost. Try `{ctx.prefix}help {ctx.command.qualified_name}`.",
 			color=discord.Color.blue(),
 			timestamp=since
 		)
