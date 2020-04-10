@@ -26,6 +26,7 @@ import discord
 from discord.ext import commands
 from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
+from matplotlib import pyplot as plt
 
 from guildmanager import __version__
 from guildmanager.converters import FuzzyGuild
@@ -249,6 +250,78 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		for guild in guilds:
 			await paginator.add_line(f"• {guild.name} ({guild.id})")
 		await paginator.send_to(ctx.channel)
+
+	@guilds_root.command(name="growth")
+	async def gr(self, ctx: commands.Context, dt: str = None):
+		"""Displays a graph of server growth
+
+		dt can either be in the format of `d/m/YYYY`, `m/YYYY` or `m/yy`. Leave blank to get from start of bot to now."""
+		import io
+		if dt:
+			formats = ["%d/%m/%Y", "%m/%Y", "%m/%y"]
+			for f0rmat in formats:
+				try:
+					period: datetime = datetime.strptime(dt, f0rmat)
+				except ValueError:
+					continue
+				else:
+					guilds = [
+						guild.me.joined_at for guild in self.bot.guilds if guild.me.joined_at and guild.me.joined_at and \
+						                                                   guild.me.joined_at.month == period.month and guild.me.joined_at.year == period.year
+					]
+					guilds.sort(key=lambda g: g)
+					inmonth = 30 if period.month % 2 else 31
+					perday = round(len(guilds) / inmonth, 3)
+					plt.grid(True)
+					fig, ax = plt.subplots()
+
+					ax.plot(guilds, tuple(range(len(guilds))), lw=2)
+
+					fig.autofmt_xdate()
+
+					plt.xlabel('Date')
+					plt.ylabel('Guilds')
+					buf = io.BytesIO()
+					fig.savefig(buf, format='png')
+					buf.seek(0)
+					e = discord.Embed(
+						description=f"Total guilds from {guilds[0].day}/{period.month}/{period.year} to {guilds[-1].day}/"
+						            f"{period.month}/{period.year}: {len(guilds)}. That is {perday} guilds per day."
+					)
+					e.set_image(url="attachment://growth.png")
+					await ctx.send(embed=e, file=discord.File(buf, filename="growth.png"))
+					buf.close()
+					plt.close()
+					return
+			else:
+				return await ctx.send("Unable to convert to any time.")
+		else:
+			guilds = [
+				guild.me.joined_at for guild in self.bot.guilds if guild.me.joined_at and guild.me.joined_at
+			]
+			guilds.sort(key=lambda g: g)
+			perday = round(len(guilds) / 365, 3)
+			permonth = round(len(guilds) / 12, 3)
+			plt.grid(True)
+			fig, ax = plt.subplots()
+
+			ax.plot(guilds, tuple(range(len(guilds))), lw=2)
+
+			fig.autofmt_xdate()
+
+			plt.xlabel('Date')
+			plt.ylabel('Guilds')
+			buf = io.BytesIO()
+			fig.savefig(buf, format='png')
+			buf.seek(0)
+			e = discord.Embed(
+				description=f"Total guilds: {len(guilds)}.\nThat is {perday} guilds per year, and {permonth} guilds "
+				            f"per month"
+			)
+			e.set_image(url="attachment://growth.png")
+			await ctx.send(embed=e, file=discord.File(buf, filename="growth.png"))
+			buf.close()
+			plt.close()
 
 	@commands.group(name="guildmanager", invoke_without_command=True, aliases=['gmeta', 'gman', 'gmd'])
 	async def gmroot(self, ctx: commands.Context):
