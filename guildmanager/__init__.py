@@ -17,18 +17,13 @@ SOFTWARE.
 """
 __version__ = "0.3.13"
 
-from datetime import datetime
-
 from guildmanager.cog import GMcog as GuildManager
 from guildmanager.cog import setup as _setup
-
-__last_update__ = datetime(2020, 4, 10, 15, 10, 0, 0)
 
 __all__ = (
 	"GuildManager",
 	"setup",
 	"__version__",
-	"__last_update__"
 )
 
 
