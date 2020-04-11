@@ -18,7 +18,6 @@ SOFTWARE.
 import asyncio
 import json
 import os
-import subprocess
 from datetime import datetime
 from typing import Union
 
@@ -404,6 +403,81 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			if ctx.channel.permissions_for(ctx.me).manage_messages:
 				await ctx.message.delete(delay=60)
 
+	@commands.Cog.listener()
+	async def on_guild_join(self, guild: discord.Guild):
+		if self.data["newserverchannel"]:
+			try:
+				channel = self.bot.get_channel(int(self.data["newserverchannel"]))
+			except ValueError as e:
+				raise ValueError("newserverchannel, serverleavechannel and max servers must be integers!") from e
+			else:
+				if isinstance(self.data["newservermessage"], dict):
+					try:
+						embed = discord.Embed.from_dict(self.data["newservermessage"])
+					except Exception as e:
+						raise TypeError("newservermessage was a dictionary, which is only for creating embeds, and an "
+						                "an error was raised in the process of creating an embed from the provided"
+						                " dict.") from e
+					else:
+						old = embed.fields
+						embed.clear_fields()
+						for i, field in enumerate(old):
+							embed.add_field(name=old[i].name.format(guild, self.bot, channel), value=old[i].value,
+							                inline=old[i].inline)
+						if embed.title:
+							embed.title.format(guild, self.bot, channel)
+						if embed.description:
+							embed.description.format(guild, self.bot, channel)
+						if embed.footer:
+							embed.set_footer(text=embed.footer.format(guild, self.bot, channel),
+							                 icon_url=embed.footer.icon_url)
+						content = None
+				else:
+					embed = None
+					content = self.data["newservermessage"].format(guild, self.bot, channel)
+				try:
+					await channel.send(content, embed=embed)
+				except:
+					raise
+
+	@commands.Cog.listener()
+	async def on_guild_remove(self, guild: discord.Guild):
+		if self.data["serverleavechannel"]:
+			try:
+				channel = self.bot.get_channel(int(self.data["serverleavechannel"]))
+			except ValueError as e:
+				raise ValueError("newserverchannel, serverleavechannel and max servers must be integers!") from e
+			else:
+				if isinstance(self.data["leaveservermessage"], dict):
+					try:
+						embed = discord.Embed.from_dict(self.data["leaveservermessage"])
+					except Exception as e:
+						raise TypeError(
+							"leaveservermessage was a dictionary, which is only for creating embeds, and an "
+							"an error was raised in the process of creating an embed from the provided"
+							" dict.") from e
+					else:
+						old = embed.fields
+						embed.clear_fields()
+						for i, field in enumerate(old):
+							embed.add_field(name=old[i].name.format(guild, self.bot, channel), value=old[i].value,
+							                inline=old[i].inline)
+						if embed.title:
+							embed.title.format(guild, self.bot, channel)
+						if embed.description:
+							embed.description.format(guild, self.bot, channel)
+						if embed.footer:
+							embed.set_footer(text=embed.footer.format(guild, self.bot, channel),
+							                 icon_url=embed.footer.icon_url)
+						content = None
+				else:
+					embed = None
+					content = self.data["leaveservermessage"].format(guild, self.bot, channel)
+				try:
+					await channel.send(content, embed=embed)
+				except:
+					raise
+
 
 def setup(bot: commands.Bot):
 	if not bot.is_ready():
@@ -424,11 +498,7 @@ def setup(bot: commands.Bot):
 			                              "leaveservermessage": "Left server {0.name} (`{0.id}`).",
 			                              "maxservers": None,
 			                              "joinlock": False,
-			                              "queuejoins": False, "first run": True,
-			                              "git ver": str(
-				                              subprocess.check_output(["git",
-				                                                       "rev-parse",
-				                                                       "HEAD"])).strip()
+			                              "queuejoins": False, "first run": True
 			                              })
 			setup(bot)
 		except TypeError as error:
