@@ -239,7 +239,12 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 	async def mutual_guilds(self, ctx: commands.Context, *, user: Union[discord.User, FuzzyGuild]):
 		"""Lists all mutual guilds you have with :user:
 		if user is a guild, it will default to the guild's owner."""
-		user = user if isinstance(user, discord.User) else user.owner
+		if isinstance(user, discord.User):
+			user: discord.User
+			user = user
+		else:
+			user: discord.Guild
+			user = user.owner
 		guilds = [g for g in self.bot.guilds if g.get_member(user.id)]
 		e = discord.Embed(
 			title=f"Mutual guilds: {len(guilds)}",
