@@ -11,10 +11,9 @@ It has many commands and features, some of which are listed below:
   - Nice UI for listing servers
   - Embedded Pagination
   - In-depth analytics for gathering information on servers your bot uses
-  - ability to access servers (via creating an invite) or even remotely talking to users with our unique *Remote Access* chat feature.
+  - ability to access servers (via creating an invite) [or even remotely talking to users with our unique *Remote Access* chat feature.] (*coming soon*)
   - banning servers, and the ability to ban every server owned by a user.
   - server infractions, and limits
-  - suspicious server alerts
   - works per bot instance
   
  Much more will be coming as time moves on. Don't forget to keep the module updated!
@@ -64,4 +63,7 @@ bot.load_extension("guildmanager.cog")
 - [#1](https://github.com/dragdev-studios/guildmanager/issues/1) - Errors loading initially after install due to file issues [SOLVED]
 - [#2](https://github.com/dragdev-studios/guildmanager/issues/2) - Errors loading before bot is ready
 - [#9](https://github.com/dragdev-studios/guildmanager/issues/9) **OR** json.JSONdecodeError - an error occured during first load, to fix it all you need to do is delete the `guildmanager.data` file that is created in your active directory
+- [No issue] - Loading `guildmanager` only works on windows, whereas unix-based systems need to use `guildmanager.cog` directly.
+
+
 **Have an issue loading the cog?** [create a new issue](https://https://github.com/dragdev-studios/guildmanager/issues/new)

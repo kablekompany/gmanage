@@ -345,12 +345,15 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		await ctx.send(embed=e)
 
 	@gmroot.command(name="update")
-	async def gm_update(self, ctx: commands.Context):
-		"""[optionally force] updates the module automatically."""
+	async def gm_update(self, ctx: commands.Context, *, pythoncommand: str = "python3"):
+		"""[optionally force] updates the module automatically.
+
+		`pythoncommand` should be the command used to invoke python. This defaults to python3 (unix OSes),
+		but if you are on, for example, windows, you should run `[prefix]gman update py`."""
 		await ctx.message.delete(delay=30)
 		await ctx.channel.trigger_typing()
 		url = "https://github.com/dragdev-studios/guildmanager"
-		cmd = f"python -m pip install git+{url} --upgrade --user"
+		cmd = f"{pythoncommand} -m pip install git+{url} --upgrade --user"
 		res = os.system(cmd)
 		if res not in [0, 256]:
 			return await ctx.send(
@@ -398,6 +401,60 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			                                          "queuejoins": False, "first run": True
 			                                          })
 			await msg.edit(content=f"Fixed.")
+
+	@gmroot.group(name="set", invoke_without_command=True)
+	async def gmset(self, ctx: commands.Context, field: str = None, value: str = None):
+		"""This command shows your current settings. Use subcommands to change them."""
+		await ctx.send(f"Warning: gmset and subcommands are not complete and no support is available yet.")
+
+		def batch(iterable: str, size: int = 1700):
+			for i in range(0, len(iterable), size):
+				yield tuple(iterable[i:i + size])
+
+		await ctx.send(f"Work in progress. For now, here's the raw JSON: ", delete_after=300)
+		paginator = commands.Paginator(prefix="```json")
+		for line in json.dumps(self.data, indent=2).splitlines():
+			if len(line) > 1980:
+				for newline in batch(line):
+					paginator.add_line(''.join(newline))
+			else:
+				paginator.add_line(line)
+		for page in paginator.pages:
+			await ctx.send(page, delete_after=300)
+			await asyncio.sleep(1)
+
+	@gmset.command(name="maxservers", aliases=['maximumservers', "maxguilds", "maximumguilds"])
+	async def gmset_maxservers(self, ctx: commands.Context, *, total: int = None):
+		"""Sets how many servers you're allowing to use your bot. Leave `total` blank to disable.
+
+		This does not affect how many servers your bot is already in."""
+		self.data["maxservers"] = total
+		write("./guildmanager.data", self.data)
+		return await ctx.send(f"Set your max guild count to {total if total is not None else 'Off'}.")
+
+	@gmset.command(name="newserverchannel", aliases=['newnotificationchannel', 'newservernotifchan', "nsc", "nsnc"])
+	async def gmset_newchannel(self, ctx: commands.Context, *, channel: discord.TextChannel = None):
+		"""Sets the channel where messages will be sent when your bot joins a new server.
+
+		The message sent can be configured via `[prefix]gman set newservermsg`.
+
+		leave `channel` blank to disable it."""
+		self.data["newserverchannel"] = channel.id if channel else None
+		write("./guildmanager.data", self.data)
+		return await ctx.send(
+			f"Set your New server notification channel to {channel.mention if channel is not None else 'Off'}.")
+
+	@gmset.command(name="newservermsg", aliases=['newnotification', 'newservernotif', 'nsn'], enabled=False)
+	async def gmset_newnotif(self, ctx: commands.Context, *, message: str):
+		"""Sets the new server notification message.
+
+		if the message starts with `{` and ends with `}`, it is presumed to be a dictionary which contains data for an
+		embed."""
+		if message.startswith("{") and message.endswith("}"):
+			try:
+				data = json.loads(message)
+			except:
+				pass
 
 	@commands.Cog.listener(name="on_command_completion")
 	async def del_our_msgs(self, ctx: commands.Context):
