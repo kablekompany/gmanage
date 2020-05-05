@@ -304,12 +304,16 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 				guild.me.joined_at for guild in self.bot.guilds if guild.me.joined_at and guild.me.joined_at
 			]
 			guilds.sort(key=lambda g: g)
+			months = {}
+			for joined in guilds:
+				if months.get(joined.month):
+					pass
 			perday = round(len(guilds) / 365, 3)
 			permonth = round(len(guilds) / 12, 3)
 			plt.grid(True)
 			fig, ax = plt.subplots()
 
-			ax.plot(guilds, tuple(range(len(guilds))), lw=2)
+			ax.plot(guilds, tuple(range(len(guilds))), lw=2, label="server count")
 
 			fig.autofmt_xdate()
 
