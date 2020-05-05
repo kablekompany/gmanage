@@ -38,6 +38,9 @@ class CustomGuildManager(cog.GMcog):
 ```
 then instead of `bot.load_extension("guildmanager")` do `bot.load_extension("path.to.the.file")` where path.to.the.file leads to the file `CustomGuildManager` is located.
 In fact, most things in the cog are subclassable. This can be useful if you want to change the ban message in `cog.py - guild_ban_check`.
+
+- Q: How can I use the utils this module comes with?
+* A: `from guildmanager.utils import ...` or `from guildmanager import utils`.
 ## quick install:
 ```
 # UNIX-based systems, like macos and linux distros:

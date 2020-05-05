@@ -18,6 +18,7 @@ SOFTWARE.
 import asyncio
 import json
 import os
+import traceback
 from datetime import datetime
 from typing import Union
 
@@ -407,7 +408,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			await msg.edit(content=f"Fixed.")
 
 	@gmroot.group(name="set", invoke_without_command=True)
-	async def gmset(self, ctx: commands.Context, field: str = None, value: str = None):
+	async def gmset(self, ctx: commands.Context):
 		"""This command shows your current settings. Use subcommands to change them."""
 		await ctx.send(f"Warning: gmset and subcommands are not complete and no support is available yet.")
 
@@ -458,7 +459,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			try:
 				data = json.loads(message)
 			except:
-				pass
+				fmt = traceback.format_exc
 
 	@commands.Cog.listener(name="on_command_completion")
 	async def del_our_msgs(self, ctx: commands.Context):
