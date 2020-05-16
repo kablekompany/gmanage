@@ -15,6 +15,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import asyncio
+
+import discord
 from discord.ext import commands
 
 from . import errors
@@ -55,13 +58,48 @@ def shorten(text: str, maxsize: int = 1000, *, delims: tuple = None, **kwargs) -
                 return text[:maxsize - 3] + '...'
 
 
-async def wait_for_message(ctx: commands.Context, custom_check: callable = None, timeout: float = 600, *,
-                           silence_timeout_error: bool = True):
+async def wait_for_message(ctx: commands.Context, custom_check: callable = None, timeout: float = 600.0, *,
+                           silence_timeout_error: bool = True, **kwargs):
     """
     waits for a message and returns the object received.
+
     :param ctx: the current context. This is also used to calculate the check if custom_check is not provided
     :param custom_check: the check to pass into wait_for. if not provided, one is generated automatically to listen to only the author in the current channel.
     :param timeout: the time to wait before timing out. if silence_timeout_error is True, this will just return an empty string. Otherwise, will raise asyncio.TimeoutError
     :param silence_timeout_error: Whether to just ignore timeout errors and return an empty string or just raise them.
-    :return:
+    :keyword return_content: Whether to return the message object's content, or just the message itself. Defaults to false (ret message)
+    :keyword delete_after: How long to wait before deleting the response. Defaults to None (won't delete)
+    :return: discord.Message or [?empty] string
     """
+    if not custom_check:
+        def custom_check(m: discord.Message):
+            return m.author == ctx.author and m.channel == ctx.channel
+    try:
+        resp = await ctx.bot.wait_for("message", check=custom_check, timeout=timeout)
+    except asyncio.TimeoutError:
+        if silence_timeout_error:
+            return ""
+        raise
+    else:
+        if kwargs.get("delete_after") and ctx.channel.permissions_for(ctx.me).manage_messages:
+            await resp.delete(delay=kwargs["delete_after"])
+        if kwargs.get("return_content"):
+            return resp.content
+        else:
+            return resp
+
+
+async def wait_for_reaction(emojis, ctx: commands.Context, custom_check: callable = None, timeout: float = 600.0, *,
+                            silence_timeout_error: bool = True, **kwargs):
+    """
+    Much like :meth:wait_for_message except it waits for a reaction, where the emoji is in *emojis.
+
+    :param emojis: A list of discord.Emoji or Unicode Emojis.
+    :param ctx: the current context. This is also used to calculate the check if custom_check is not provided
+    :param custom_check: the check to pass into wait_for. if not provided, one is generated automatically to listen to only the author in the current channel and for reactions in *emojis.
+    :param timeout: the time to wait before timing out. if silence_timeout_error is True, this will just return an empty string. Otherwise, will raise asyncio.TimeoutError
+    :param silence_timeout_error: Whether to just ignore timeout errors and return an empty string or just raise them.
+    :keyword return_content: Whether to return the reaction emoji, or just the reaction object itself. Defaults to false (ret reac obj)
+    :return: discord.Reaction or None
+    """
+    raise NotImplementedError("Wait_for_reaction is a work in progress and is not available on the public branch.")
