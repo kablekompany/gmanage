@@ -81,6 +81,8 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 		There are no restrictions, so you can use every flag if you want. However this would be very contradicting.
 		All flags are processed in the above order, starting with `--extended` to `--sort-by-bots`.
 		"""
+		await ctx.send(f":exclamation: Notice from developer: **guildmanager is deprecated.** Please stop using it,"
+		               f" as it is no-longer maintained.")
 		flags = [fl.lower() for fl in flags if fl.startswith("--")]
 		guilds = self.bot.guilds
 		extended = "--extended" in flags or "-e" in flags
@@ -459,7 +461,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			try:
 				data = json.loads(message)
 			except:
-				fmt = traceback.format_exc
+				fmt = traceback.format_exc()
 
 	@commands.Cog.listener(name="on_command_completion")
 	async def del_our_msgs(self, ctx: commands.Context):
@@ -547,6 +549,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 
 
 def setup(bot: commands.Bot):
+	print("WARNING: guildmanager is now discontinued.")
 	if not bot.is_ready():
 		print("Unable to load GuildManager - bot's cache is not ready, and thus would cause issues loading.")
 	else:
