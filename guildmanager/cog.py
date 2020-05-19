@@ -459,7 +459,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
 			try:
 				data = json.loads(message)
 			except:
-				fmt = traceback.format_exc
+				fmt = traceback.format_exc()
 
 	@commands.Cog.listener(name="on_command_completion")
 	async def del_our_msgs(self, ctx: commands.Context):
