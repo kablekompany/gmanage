@@ -21,15 +21,15 @@ from guildmanager.cog import GMcog as GuildManager
 from guildmanager.cog import setup as _setup
 
 __all__ = (
-	"GuildManager",
-	"setup",
-	"__version__",
+    "GuildManager",
+    "setup",
+    "__version__",
 )
 
 
 def setup(bot):
-	try:
-		_setup(bot)
-	except Exception as e:
-		print(f"Error while loading GuildManager. Not loaded.", e)
-		raise e
+    try:
+        _setup(bot)
+    except Exception as e:
+        print(f"Error while loading GuildManager. Not loaded.", e)
+        raise e

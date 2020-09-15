@@ -1,4 +1,4 @@
-![Python package](https://github.com/dragdev-studios/guildmanager/workflows/Python%20package/badge.svg)
+![Python package](https://github.com/kablekompany/guildmanager/workflows/Python%20package/badge.svg)
 # guildmanager
 Simple and easy guild management for python discord bots!
 
@@ -44,17 +44,17 @@ In fact, most things in the cog are subclassable. This can be useful if you want
 ## quick install:
 ```
 # UNIX-based systems, like macos and linux distros:
-python3 -m pip install git+https://github.com/dragdev-studios/guildmanager
+python3 -m pip install git+https://github.com/kablekompany/guildmanager
 
 # Windows
-pip install git+https://github.com/dragdev-studios/guildmanager
+pip install git+https://github.com/kablekompany/guildmanager
 
 -- updating --
 # UNIX-based systems, like macos and linux distros:
-python3 -m pip install git+https://github.com/dragdev-studios/guildmanager --upgrade
+python3 -m pip install git+https://github.com/kablekompany/guildmanager --upgrade
 
 # Windows
-pip install git+https://github.com/dragdev-studios/guildmanager --upgrade
+pip install git+https://github.com/kablekompany/guildmanager --upgrade
 ```
 ## quick load
 ```
@@ -62,11 +62,11 @@ bot.load_extension("guildmanager.cog")
 ```
 
 ## Known issues loading:
-* Please read the wiki before loading, mainly [this page](https://github.com/dragdev-studios/guildmanager/wiki/Loading-before-bot-is-ready%3F)
-- [#1](https://github.com/dragdev-studios/guildmanager/issues/1) - Errors loading initially after install due to file issues [SOLVED]
-- [#2](https://github.com/dragdev-studios/guildmanager/issues/2) - Errors loading before bot is ready
-- [#9](https://github.com/dragdev-studios/guildmanager/issues/9) **OR** json.JSONdecodeError - an error occured during first load, to fix it all you need to do is delete the `guildmanager.data` file that is created in your active directory
+* Please read the wiki before loading, mainly [this page](https://github.com/kablekompany/guildmanager/wiki/Loading-before-bot-is-ready%3F)
+- [#1](https://github.com/kablekompany/guildmanager/issues/1) - Errors loading initially after install due to file issues [SOLVED]
+- [#2](https://github.com/kablekompany/guildmanager/issues/2) - Errors loading before bot is ready
+- [#9](https://github.com/kablekompany/guildmanager/issues/9) **OR** json.JSONdecodeError - an error occured during first load, to fix it all you need to do is delete the `guildmanager.data` file that is created in your active directory
 - [No issue] - Loading `guildmanager` only works on windows, whereas unix-based systems need to use `guildmanager.cog` directly.
 
 
-**Have an issue loading the cog?** [create a new issue](https://https://github.com/dragdev-studios/guildmanager/issues/new)
+**Have an issue loading the cog?** [create a new issue](https://https://github.com/kablekompany/guildmanager/issues/new)

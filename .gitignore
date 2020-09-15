@@ -207,5 +207,5 @@ ENV/
 env.bak/
 venv.bak/
 pip-selfcheck.json
-
-# End of https://www.gitignore.io/api/venv,python,pycharm
+.history
+# End of https://www.gitignore.io/api/venv,python,pycharm.history

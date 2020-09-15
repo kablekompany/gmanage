@@ -39,7 +39,7 @@ class CanNotShorten(GMException):
         self.text = text
 
     def __str__(self):
-        return "Unable to shorten text \"{}\" with delimiters \"{}\".".format(self.text[:100], ', '.join(self.delims))
+        return 'Unable to shorten text "{}" with delimiters "{}".'.format(self.text[:100], ", ".join(self.delims))
 
     def __iter__(self):
         return self.delims

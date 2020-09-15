@@ -37,7 +37,7 @@ def shorten(text: str, maxsize: int = 1000, *, delims: tuple = None, **kwargs) -
     """
     if delims is None:  # have to do a strict is check, as strings like "" resolve to False.
         if len(text) > maxsize:
-            return text[:maxsize - 3] + '...'
+            return text[: maxsize - 3] + "..."
         else:
             return text
     else:
@@ -55,11 +55,17 @@ def shorten(text: str, maxsize: int = 1000, *, delims: tuple = None, **kwargs) -
             if kwargs.get("raise_if_failed_delim") is True:
                 raise errors.CanNotShorten(delims, text)
             else:
-                return text[:maxsize - 3] + '...'
+                return text[: maxsize - 3] + "..."
 
 
-async def wait_for_message(ctx: commands.Context, custom_check: callable = None, timeout: float = 600.0, *,
-                           silence_timeout_error: bool = True, **kwargs):
+async def wait_for_message(
+    ctx: commands.Context,
+    custom_check: callable = None,
+    timeout: float = 600.0,
+    *,
+    silence_timeout_error: bool = True,
+    **kwargs,
+):
     """
     waits for a message and returns the object received.
 
@@ -72,8 +78,10 @@ async def wait_for_message(ctx: commands.Context, custom_check: callable = None,
     :return: discord.Message or [?empty] string
     """
     if not custom_check:
+
         def custom_check(m: discord.Message):
             return m.author == ctx.author and m.channel == ctx.channel
+
     try:
         resp = await ctx.bot.wait_for("message", check=custom_check, timeout=timeout)
     except asyncio.TimeoutError:
@@ -89,8 +97,15 @@ async def wait_for_message(ctx: commands.Context, custom_check: callable = None,
             return resp
 
 
-async def wait_for_reaction(emojis, ctx: commands.Context, custom_check: callable = None, timeout: float = 600.0, *,
-                            silence_timeout_error: bool = True, **kwargs):
+async def wait_for_reaction(
+    emojis,
+    ctx: commands.Context,
+    custom_check: callable = None,
+    timeout: float = 600.0,
+    *,
+    silence_timeout_error: bool = True,
+    **kwargs,
+):
     """
     Much like :meth:wait_for_message except it waits for a reaction, where the emoji is in *emojis.
 
