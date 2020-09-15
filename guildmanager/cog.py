@@ -74,7 +74,6 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
         send_messages=True,
         read_messages=True,
         external_emojis=True,
-        manage_messages=True,
         read_message_history=True,
     )
     async def guilds_root(self, ctx: commands.Context, *flags):
