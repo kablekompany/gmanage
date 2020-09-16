@@ -532,13 +532,11 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
                 raise ValueError("newserverchannel, serverleavechannel and max servers must be integers!") from e
             embed = discord.Embed()
             embed.add_field(
-            name=guild.name.format(guild, self.bot, channel),
-            value=guild.value,
-            inline=True,
+                name=guild.name.format(guild, self.bot, channel),
+                value=guild.value,
+                inline=True,
             )
-            embed.set_footer(
-                text=embed.footer.format(guild, self.bot, channel), icon_url=embed.footer.icon_url
-                )
+            embed.set_footer(text=embed.footer.format(guild, self.bot, channel), icon_url=embed.footer.icon_url)
             embed.title.format(guild, self.bot, channel)
             embed.description.format(guild, self.bot, channel)
             # if embed.title:
@@ -561,22 +559,22 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
                 #         ) from e
                 #     else:
                 #         # old = embed.fields
-                        # embed.clear_fields()
-                        # for i, field in enumerate(old):
-                        #     embed.add_field(
-                        #         name=old[i].name.format(guild, self.bot, channel),
-                        #         value=old[i].value,
-                        #         inline=old[i].inline,
-                        #     )
-                        # if embed.title:
-                        #     embed.title.format(guild, self.bot, channel)
-                        # if embed.description:
-                        #     embed.description.format(guild, self.bot, channel)
-                        # if embed.footer:
-                        #     embed.set_footer(
-                        #         text=embed.footer.format(guild, self.bot, channel), icon_url=embed.footer.icon_url
-                        #     )
-                        # content = None
+                # embed.clear_fields()
+                # for i, field in enumerate(old):
+                #     embed.add_field(
+                #         name=old[i].name.format(guild, self.bot, channel),
+                #         value=old[i].value,
+                #         inline=old[i].inline,
+                #     )
+                # if embed.title:
+                #     embed.title.format(guild, self.bot, channel)
+                # if embed.description:
+                #     embed.description.format(guild, self.bot, channel)
+                # if embed.footer:
+                #     embed.set_footer(
+                #         text=embed.footer.format(guild, self.bot, channel), icon_url=embed.footer.icon_url
+                #     )
+                # content = None
                 # else:
                 #     embed = None
                 # try:
