@@ -221,7 +221,7 @@ class GuildManager(commands.Cog):
         """Leaves a server."""
         guild: discord.Guild
         await guild.leave()
-        return await ctx.message.add_reaction("\N{white heavy check mark}")
+        return await ctx.tick()
 
     @gm_root.command(name="mutual", aliases=["in"])
     async def gm_mutual(self, ctx: commands.Context, *, user: Union[discord.Member, discord.User, int]):
@@ -243,7 +243,7 @@ class GuildManager(commands.Cog):
                 for page in paginator.pages[1:]:
                     await ctx.send(page)
 
-    @gm_root.command(name="update")
+    @gm_root.command(name="update", hidden=True)
     async def update(self, ctx, *, version: str = None):
         """Updates the module to the latest (or provided) version."""
         proc = psutil.Process()
@@ -377,7 +377,7 @@ class GuildManager(commands.Cog):
                 self.data["banned"] = [guild.id]
             else:
                 self.data["banned"].append(guild.id)
-            return await ctx.send(f"\N{white heavy check mark} banned the server {guild.id}.")
+            return await ctx.send(f"<a:kko_tick_green:725961299267420172> banned the server {guild.id}.")
 
     @gm_root.command(name="unban")
     async def gm_unbn(self, ctx: commands.Context, *, guild: typing.Union[Guild, int]):
@@ -388,7 +388,7 @@ class GuildManager(commands.Cog):
             self.data["banned"] = []
         else:
             self.data["banned"].remove(guild)
-        return await ctx.send(f"\N{white heavy check mark} unbanned the server {guild}.")
+        return await ctx.send(f"<a:kko_tick_green:725961299267420172> unbanned the server {guild}.")
 
 
 def setup(bot):
