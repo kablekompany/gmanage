@@ -25,17 +25,17 @@ setup(
     name='guildmanager-v2',
     version="0.0.9",  # version,
     packages=['guildmanager'],
-    url='https://github.com/dragdev-studios/guildmanager_v2',
+    url='https://github.com/kablekompany/gmanage',
     license='Apache License 2.0',
     author='EEKIM10',
-    author_email='discordebotdev@gmail.com',
+    author_email='trent@kablekompany.com',
     description='Version 2 of guildmanager, with actual quality.',
 
     long_description=readme,
     long_description_content_type="text/markdown",
     project_urls={
-        "Issue Tracker": "https://github.com/dragdev-studios/guildmanager_v2/issues",
-        "Documentation": "https://github.com/dragdev-studios/guildmanager_v2/wiki"
+        "Issue Tracker": "https://github.com/kablekompany/gmanage/issues",
+        "Documentation": "https://github.com/kablekompany/gmanage/wiki"
     },
     install_requires=requirements
 )
