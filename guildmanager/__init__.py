@@ -24,12 +24,12 @@ _PERMS = {
     "send_messages": True,
     "embed_links": True,
     "attach_files": True,
-    "manage_messages": True,
+    # "manage_messages": True,
     "add_reactions": True,
     "use_external_emojis": True,
 }
 
-__version__ = "0.0.4a"
+__version__ = "1.0.0"
 __git_ver__ = get_git_commit()
 
 parser = argparse.ArgumentParser()  # soonTM
@@ -54,7 +54,7 @@ class GuildManager(commands.Cog):
         self.pings = 0.0
         self.average_latency = float(self.bot.latency / 1000)
 
-        self.loaded = datetime.utcnow()
+        self.loaded = datetime.now()
 
         try:
             with open("./gman.data") as rfile:
