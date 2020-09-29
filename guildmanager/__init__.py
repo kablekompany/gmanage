@@ -9,16 +9,15 @@ from typing import Union
 import discord
 import psutil
 from discord.ext import commands, tasks
-from humanize import naturaltime as nt, intcomma as ic
+from humanize import intcomma as ic
+from humanize import naturaltime as nt
 from jishaku.paginators import PaginatorEmbedInterface
 from jishaku.shell import ShellReader
 from matplotlib import pyplot as plt
 
-from .helpers import get_git_commit, Guild
+from .helpers import Guild, get_git_commit
 
-_DEFAULTS = {
-    "banned": []
-}
+_DEFAULTS = {"banned": []}
 _PERMS = {
     "read_messages": True,
     "send_messages": True,
@@ -26,13 +25,14 @@ _PERMS = {
     "attach_files": True,
     "manage_messages": True,
     "add_reactions": True,
-    "use_external_emojis": True
+    "use_external_emojis": True,
 }
 
 __version__ = "0.0.4a"
 __git_ver__ = get_git_commit()
 
 parser = argparse.ArgumentParser()  # soonTM
+
 
 def percent(part: float, whole: float = 100.0, *, r: int = 0) -> float:
     """Calculates percentages. Now't special."""
@@ -61,8 +61,10 @@ class GuildManager(commands.Cog):
             self.data = data
             logging.info(f"[GUILDMANAGER] loaded data from ./gman.data")
         except Exception as e:
-            logging.warning(f"[GUILDMANAGER] Failed to load data from ./gman.data ({str(e)}), creating a new file"
-                            f" with default settings.")
+            logging.warning(
+                f"[GUILDMANAGER] Failed to load data from ./gman.data ({str(e)}), creating a new file"
+                f" with default settings."
+            )
             with open("./gman.data", "w+") as wfile:
                 json.dump(_DEFAULTS, wfile)
                 self.data = _DEFAULTS
@@ -85,8 +87,9 @@ class GuildManager(commands.Cog):
     async def bot_check(self, ctx):
         if ctx.guild:
             if ctx.guild.id in self.data.get("banned", []):
-                raise commands.CheckFailure("This server is prohibited from using this bot. Please contact the owner"
-                                            " to have this lifted.")
+                raise commands.CheckFailure(
+                    "This server is prohibited from using this bot. Please contact the owner" " to have this lifted."
+                )
         return True
 
     @property
@@ -112,34 +115,35 @@ class GuildManager(commands.Cog):
         latency = latency / self.pings
         self.average_latency = latency
 
-    @commands.group(name="guilds", aliases=['servers', 'gm', 'sm'], invoke_without_command=True)
+    @commands.group(name="guilds", aliases=["servers", "gm", "sm"], invoke_without_command=True)
     @commands.bot_has_permissions(**_PERMS)
     async def gm_root(self, ctx: commands.Context):
         """Shows a nice list of your bot's servers."""
         group_commands = sum([1 for n in self.bot.walk_commands() if isinstance(n, commands.Group)])
 
-        e = discord.Embed(
-            title=f"You have: {len(self.bot.guilds)} guilds."
-        )
+        e = discord.Embed(title=f"You have: {len(self.bot.guilds)} guilds.")
         e.add_field(
             name="All Statistics:",
             value=f"**Guilds:** {len(self.bot.guilds)}\n"
-                  f"**Channels:** {len(list(self.bot.get_all_channels()))}\n"
-                  f"**Users:** {len(self.bot.users)}\n"
-                  f"**Emojis:** {len(set(self.bot.emojis))}\n"
-                  f"**Cached Messages:** {len(self.bot.cached_messages)}\n"
-                  f"**Average Ping:** `{round(self.average_latency, 3)}ms`\n"
-                  f"\n"
-                  f"**Loaded Cogs:** {len(self.bot.cogs)}\n"
-                  f"**Loaded Extensions:** {len(self.bot.extensions)}\n"
-                  f"\n"
-                  f"**Total single commands:** {len(self.bot.commands)}\n"
-                  f"**Total group commands:** {group_commands}\n"
-                  f"**Total sub commands:** {sum([1 for n in self.bot.walk_commands() if n.parent])}"
+            f"**Channels:** {len(list(self.bot.get_all_channels()))}\n"
+            f"**Users:** {len(self.bot.users)}\n"
+            f"**Emojis:** {len(set(self.bot.emojis))}\n"
+            f"**Cached Messages:** {len(self.bot.cached_messages)}\n"
+            f"**Average Ping:** `{round(self.average_latency, 3)}ms`\n"
+            f"\n"
+            f"**Loaded Cogs:** {len(self.bot.cogs)}\n"
+            f"**Loaded Extensions:** {len(self.bot.extensions)}\n"
+            f"\n"
+            f"**Total single commands:** {len(self.bot.commands)}\n"
+            f"**Total group commands:** {group_commands}\n"
+            f"**Total sub commands:** {sum([1 for n in self.bot.walk_commands() if n.parent])}",
         )
-        e.add_field(name="Cog Info", value=f"**Loaded:** {nt(self.loaded)}\n"
-                                           f"**Sampled Pings:** {ic(self.sampled_pings)}\n"
-                                           f"**Version:** {__version__}")
+        e.add_field(
+            name="Cog Info",
+            value=f"**Loaded:** {nt(self.loaded)}\n"
+            f"**Sampled Pings:** {ic(self.sampled_pings)}\n"
+            f"**Version:** {__version__}",
+        )
 
         owners = [x.owner for x in self.bot.guilds]
         v = ""
@@ -148,14 +152,7 @@ class GuildManager(commands.Cog):
             v += f"{n}. {user} ({percent(owners.count(user), len(owners))}%)\n"
         e.add_field(name="Guild owners, sorted by number of servers they own that uses the bot:", value=v)
 
-        paginator = PaginatorEmbedInterface(
-            self.bot,
-            commands.Paginator(
-                "", "",
-                max_size=1990
-            ),
-            embed=e
-        )
+        paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("", "", max_size=1990), embed=e)
         for n, guild in enumerate(self.bot.guilds):
             await paginator.add_line(f"{ic(n)}. {guild} (`{guild.id}`): {guild.member_count}")
         await paginator.send_to(ctx.channel)
@@ -184,11 +181,15 @@ class GuildManager(commands.Cog):
                 await m.edit(content="No Infinite Invites found - creating.")
                 for channel in guild.text_channels:
                     try:
-                        invite = await channel.create_invite(max_age=60, max_uses=1, unique=True,
-                                                             reason=f"Invite requested"
-                                                                    f" by {ctx.author} via official management command. "
-                                                                    f"do not be alarmed, this is usually just"
-                                                                    f" to check something.")
+                        invite = await channel.create_invite(
+                            max_age=60,
+                            max_uses=1,
+                            unique=True,
+                            reason=f"Invite requested"
+                            f" by {ctx.author} via official management command. "
+                            f"do not be alarmed, this is usually just"
+                            f" to check something.",
+                        )
                         break
                     except:
                         continue
@@ -199,9 +200,14 @@ class GuildManager(commands.Cog):
             m = await ctx.send("Attempting to create an invite.")
             for channel in guild.text_channels:
                 try:
-                    invite = await channel.create_invite(max_age=60, max_uses=1, unique=True, reason=f"Invite requested"
-                                                                                                     f" by {ctx.author} via official management command. do not be alarmed, this is usually just"
-                                                                                                     f" to check something.")
+                    invite = await channel.create_invite(
+                        max_age=60,
+                        max_uses=1,
+                        unique=True,
+                        reason=f"Invite requested"
+                        f" by {ctx.author} via official management command. do not be alarmed, this is usually just"
+                        f" to check something.",
+                    )
                     break
                 except:
                     continue
@@ -209,17 +215,18 @@ class GuildManager(commands.Cog):
                 return await m.edit(content=f"Unable to create an invite - missing permissions.")
             await m.edit(content=f"Temp invite: {invite.url} -> max age: 60s, max uses: 1")
 
-    @gm_root.command(name="leave", aliases=['rem', 'remove'])
+    @gm_root.command(name="leave", aliases=["rem", "remove"])
     async def gm_leave(self, ctx: commands.Context, *, guild: Guild):
         """Leaves a server."""
         guild: discord.Guild
         await guild.leave()
         return await ctx.message.add_reaction("\N{white heavy check mark}")
 
-    @gm_root.command(name="mutual", aliases=['in'])
+    @gm_root.command(name="mutual", aliases=["in"])
     async def gm_mutual(self, ctx: commands.Context, *, user: Union[discord.Member, discord.User, int]):
         """Tells you how many mutual guilds the bot has with another user."""
-        if isinstance(user, int): return await ctx.send("User not found.")
+        if isinstance(user, int):
+            return await ctx.send("User not found.")
         paginator = commands.Paginator("```md")
         n = 1
         r = 0
@@ -242,10 +249,16 @@ class GuildManager(commands.Cog):
         with proc.oneshot():
             command = proc.name()
             if not command.lower().startswith("py"):
-                return await ctx.send(f"Unable to automatically update: process name does not start with `py`,"
-                                      f" so unable to invoke pip.")
+                return await ctx.send(
+                    f"Unable to automatically update: process name does not start with `py`,"
+                    f" so unable to invoke pip."
+                )
             else:
-                run = command.lower() + " -m pip install guildmanager-v2" + (" --upgrade" if not version else f"=={version}")
+                run = (
+                    command.lower()
+                    + " -m pip install guildmanager-v2"
+                    + (" --upgrade" if not version else f"=={version}")
+                )
 
         paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("```bash", "```", 1600))
         async with ctx.channel.typing():
@@ -258,7 +271,7 @@ class GuildManager(commands.Cog):
                 await paginator.add_line(f"[status] return code {reader.close_code}")
         return await paginator.send_to(ctx.channel)
 
-    @gm_root.command(name="search", aliases=['find', 'query'])
+    @gm_root.command(name="search", aliases=["find", "query"])
     async def gm_find(self, ctx: commands.Context, *, q: typing.Union[discord.User, int, str]):
         """Iterates through bot.guilds, and if `q` is equal to owner, ID, or name, matches.
 
@@ -280,7 +293,8 @@ class GuildManager(commands.Cog):
                 first_page = f"{q.mention} owns {pc}% of the bot's servers:\n{paginator.pages[0]}"
                 await ctx.send(first_page)
                 if len(paginator.pages) > 1:
-                    for page in paginator.pages: await ctx.send(page)
+                    for page in paginator.pages:
+                        await ctx.send(page)
         elif isinstance(q, int):
             matches = []
             for guild in self.bot.guilds:
@@ -298,7 +312,8 @@ class GuildManager(commands.Cog):
                 first_page = paginator.pages[0]
                 await ctx.send(first_page)
                 if len(paginator.pages) > 1:
-                    for page in paginator.pages: await ctx.send(page)
+                    for page in paginator.pages:
+                        await ctx.send(page)
         else:
             matches = []
             for guild in self.bot.guilds:
@@ -316,15 +331,14 @@ class GuildManager(commands.Cog):
                 first_page = paginator.pages[0]
                 await ctx.send(first_page)
                 if len(paginator.pages) > 1:
-                    for page in paginator.pages: await ctx.send(page)
+                    for page in paginator.pages:
+                        await ctx.send(page)
 
-    @gm_root.command(name="growth", aliases=['graph'])
+    @gm_root.command(name="growth", aliases=["graph"])
     async def gm_growth(self, ctx: commands.Context):
         """Shows your growth statistics, in a neat little graph!"""
         plt.clf()
-        guilds = [
-            guild.me.joined_at for guild in self.bot.guilds
-        ]
+        guilds = [guild.me.joined_at for guild in self.bot.guilds]
         guilds.sort(key=lambda g: g)
         plt.grid(True)
         fig, ax = plt.subplots()
@@ -333,10 +347,10 @@ class GuildManager(commands.Cog):
 
         fig.autofmt_xdate()
 
-        plt.xlabel('Date')
-        plt.ylabel('Guilds')
+        plt.xlabel("Date")
+        plt.ylabel("Guilds")
         buf = io.BytesIO()
-        fig.savefig(buf, format='png')
+        fig.savefig(buf, format="png")
         buf.seek(0)
         e = discord.Embed(color=discord.Color.orange())
         e.set_image(url="attachment://attachment.png")
@@ -350,8 +364,11 @@ class GuildManager(commands.Cog):
         If it is not, the bot will just not respond to any commands in that server (but will raise checkfailures)."""
         # prevent a softlock with no obvious fix to people with less than 1 braincell
         owner_in = list(
-            filter(lambda g: ctx.author in g.members and g.id not in self.data.get('banned', []) and g.id != guild.id,
-                   self.bot.guilds))
+            filter(
+                lambda g: ctx.author in g.members and g.id not in self.data.get("banned", []) and g.id != guild.id,
+                self.bot.guilds,
+            )
+        )
         if len(owner_in) <= 0:
             return await ctx.send(f"Unable to ban as this would softlock the bot.")
         else:
@@ -364,7 +381,8 @@ class GuildManager(commands.Cog):
     @gm_root.command(name="unban")
     async def gm_unbn(self, ctx: commands.Context, *, guild: typing.Union[Guild, int]):
         """Unbans a server. See: [p]help guilds ban"""
-        if isinstance(guild, discord.Guild): guild = guild.id
+        if isinstance(guild, discord.Guild):
+            guild = guild.id
         if not self.data.get("banned"):
             self.data["banned"] = []
         else:

@@ -23,16 +23,15 @@ from datetime import datetime
 from typing import Union
 
 import discord
+from gmanage import __version__
+from gmanage.converters import FuzzyGuild
+from gmanage.io import read, write
 from jishaku.paginators import PaginatorEmbedInterface as PEI
 from jishaku.paginators import PaginatorInterface as PI
 from matplotlib import pyplot as plt
 
 # from discord.ext import commands
 from redbot.core import commands
-
-from gmanage import __version__
-from gmanage.converters import FuzzyGuild
-from gmanage.io import read, write
 
 
 class GMcog(commands.Cog, name="Guild Management Cog"):
@@ -68,11 +67,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
         name="guilds", aliases=["servers", "gm", "GuildManagement"], case_insensitive=True, invoke_without_command=True
     )
     @commands.bot_has_permissions(
-        embed_links=True,
-        send_messages=True,
-        read_messages=True,
-        external_emojis=True,
-        read_message_history=True,
+        embed_links=True, send_messages=True, read_messages=True, external_emojis=True, read_message_history=True,
     )
     async def guilds_root(self, ctx: commands.Context, *flags):
         """
@@ -532,9 +527,7 @@ class GMcog(commands.Cog, name="Guild Management Cog"):
                 raise ValueError("newserverchannel, serverleavechannel and max servers must be integers!") from e
             embed = discord.Embed()
             embed.add_field(
-                name=guild.name.format(guild, self.bot, channel),
-                value=guild.value,
-                inline=True,
+                name=guild.name.format(guild, self.bot, channel), value=guild.value, inline=True,
             )
             embed.set_footer(text=embed.footer.format(guild, self.bot, channel), icon_url=embed.footer.icon_url)
             embed.title.format(guild, self.bot, channel)
