@@ -8,7 +8,8 @@ from typing import Union
 
 import discord
 import psutil
-from discord.ext import commands, tasks
+from discord.ext import tasks
+from redbot.core import commands
 from humanize import intcomma as ic
 from humanize import naturaltime as nt
 from jishaku.paginators import PaginatorEmbedInterface
