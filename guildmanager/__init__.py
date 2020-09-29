@@ -116,7 +116,7 @@ class GuildManager(commands.Cog):
         latency = latency / self.pings
         self.average_latency = latency
 
-    @commands.group(name="guilds", aliases=["servers", "gm", "sm"], invoke_without_command=True)
+    @commands.group(name="guilds", aliases=["kkoserv", "gm", "sm"], invoke_without_command=True)
     @commands.bot_has_permissions(**_PERMS)
     async def gm_root(self, ctx: commands.Context):
         """Shows a nice list of your bot's servers."""
