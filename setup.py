@@ -31,7 +31,7 @@ setup(
     license="Apache License 2.0",
     author="EEKIM10",
     author_email="trent@kablekompany.com",
-    description="Version 2 of guildmanager, with actual quality.",
+    description="Version 2 of guildmanager, with actual quality from DragDev ported to Red.",
     long_description=readme,
     long_description_content_type="text/markdown",
     project_urls={

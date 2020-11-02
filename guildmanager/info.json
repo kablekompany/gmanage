@@ -1,0 +1,24 @@
+{
+    "name": "GuildManager",
+    "short": "",
+    "description": "yuh boiiiii",
+    "end_user_data_statement": "This cog doesn't persistently store data or meta about users.'",
+    "install_msg": "aaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "author": [
+				"kablekompany (KableKompany#0001)",
+				"Forked from DragDev"
+    ],
+    "required_cogs": {},
+    "requirements": [
+			"matplotlib",
+			"humanize",
+			"jishaku",
+			"psutil"
+		],
+    "tags": [
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}
