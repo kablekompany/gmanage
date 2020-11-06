@@ -378,6 +378,12 @@ class GuildManager(commands.Cog):
                 self.data["banned"] = [guild.id]
             else:
                 self.data["banned"].append(guild.id)
+        if leave_too:
+            try:
+                await guild.leave()
+            except Exception:
+                await ctx.send("Not in that server it seems, but its added to my ban list")
+        else:
             return await ctx.send(f"Banned the server {guild.name}" + "`{guild.id}`" if guild.id else "")
 
     @gm_root.command(name="unban")
