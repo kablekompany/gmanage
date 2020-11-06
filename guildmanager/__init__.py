@@ -16,6 +16,7 @@ from jishaku.paginators import PaginatorEmbedInterface
 from jishaku.shell import ShellReader
 from matplotlib import pyplot as plt
 
+
 from .helpers import Guild, get_git_commit
 
 _DEFAULTS = {"banned": []}
@@ -105,7 +106,7 @@ class GuildManager(commands.Cog):
         """returns how many times the cog has sampled pings."""
         return self.pings
 
-    @tasks.loop(seconds=1)
+    @tasks.loop(seconds=600)
     async def sample_ping(self):
         """
         Samples pings every second.
@@ -358,7 +359,7 @@ class GuildManager(commands.Cog):
         return await ctx.send(embed=e, file=discord.File(buf, "attachment.png"))
 
     @gm_root.command(name="ban")
-    async def ban(self, ctx: commands.Context, leave_too: typing.Optional[bool] = False, *, guild: Guild):
+    async def ban(self, ctx: commands.Context, guild: discord.Guild, leave_too: typing.Optional[bool] = False):
         """Bans a server from using the bot
 
         if `leave_too` is True, this will leave the server after banning it.
@@ -377,7 +378,7 @@ class GuildManager(commands.Cog):
                 self.data["banned"] = [guild.id]
             else:
                 self.data["banned"].append(guild.id)
-            return await ctx.send(f"<a:kko_tick_green:725961299267420172> banned the server {guild.id}.")
+            return await ctx.send(f"Banned the server {guild.name}" + "`{guild.id}`" if guild.id else "")
 
     @gm_root.command(name="unban")
     async def gm_unbn(self, ctx: commands.Context, *, guild: typing.Union[Guild, int]):
@@ -388,7 +389,7 @@ class GuildManager(commands.Cog):
             self.data["banned"] = []
         else:
             self.data["banned"].remove(guild)
-        return await ctx.send(f"<a:kko_tick_green:725961299267420172> unbanned the server {guild}.")
+        return await ctx.send(f"Server {guild} unbanned.")
 
 
 def setup(bot):
