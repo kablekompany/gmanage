@@ -16,6 +16,8 @@ from jishaku.paginators import PaginatorEmbedInterface
 from jishaku.shell import ShellReader
 from matplotlib import pyplot as plt
 
+log = logging.getLogger("red.kko-gm-ported.guildmanager")
+
 from .helpers import Guild, get_git_commit
 
 _DEFAULTS = {"banned": []}
@@ -60,9 +62,9 @@ class GuildManager(commands.Cog):
             with open("./gman.data") as rfile:
                 data = json.load(rfile)
             self.data = data
-            logging.info(f"[GUILDMANAGER] loaded data from ./gman.data")
+            log.info(f"[GUILDMANAGER] loaded data from ./gman.data")
         except Exception as e:
-            logging.warning(
+            log.warning(
                 f"[GUILDMANAGER] Failed to load data from ./gman.data ({str(e)}), creating a new file"
                 f" with default settings."
             )
@@ -70,13 +72,13 @@ class GuildManager(commands.Cog):
                 json.dump(_DEFAULTS, wfile)
                 self.data = _DEFAULTS
         finally:
-            logging.info("[GUILDMANAGER] Cog Loaded.")
+            log.info("[GUILDMANAGER] Cog Loaded.")
             self.sample_ping.start()
 
     def cog_unload(self):
         with open("./gman.data", "w") as wfile:
             json.dump(self.data, wfile)
-        logging.info(f"[GUILDMANAGER] Cog unloaded.")
+        log.info(f"[GUILDMANAGER] Cog unloaded.")
         self.sample_ping.stop()
 
     async def cog_check(self, ctx: commands.Context):
