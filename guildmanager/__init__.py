@@ -4,15 +4,17 @@ import json
 import logging
 import typing
 from datetime import datetime
-from typing import Union
+from typing import Union, Optional
 
 import discord
 import psutil
 from discord.ext import tasks
-from redbot.core import commands
+from redbot.core import commands, checks
 from humanize import intcomma as ic
 from humanize import naturaltime as nt
 from jishaku.paginators import PaginatorEmbedInterface
+from redbot.core.utils import AsyncIter
+from redbot.core.commands.converters import TimedeltaConverter
 from jishaku.shell import ShellReader
 from matplotlib import pyplot as plt
 
@@ -83,15 +85,15 @@ class GuildManager(commands.Cog):
 
     async def cog_check(self, ctx: commands.Context):
         if not await ctx.bot.is_owner(ctx.author):
-            raise commands.NotOwner()
+            raise discord.ext.commands.NotOwner()
 
         return True
 
     async def bot_check(self, ctx):
         if ctx.guild:
             if ctx.guild.id in self.data.get("banned", []):
-                raise commands.CheckFailure(
-                    "This server is prohibited from using this bot. Please contact the owner" " to have this lifted."
+                raise discord.ext.commands.CheckFailure(
+                    "This server is prohibited from using this bot. Please contact the bot owner" " to have this lifted."
                 )
         return True
 
@@ -99,7 +101,9 @@ class GuildManager(commands.Cog):
     def ping(self) -> float:
         """Returns the bot's average latency (heartbeat/api connection latency), in ms.
 
-        This is sampled every second."""
+        This is sampled every 10 min.
+        """
+
         return self.average_latency
 
     @property
@@ -245,43 +249,43 @@ class GuildManager(commands.Cog):
                 for page in paginator.pages[1:]:
                     await ctx.send(page)
 
-    @gm_root.command(name="update", hidden=True)
-    async def update(self, ctx, *, version: str = None):
-        """Updates the module to the latest (or provided) version."""
-        proc = psutil.Process()
-        with proc.oneshot():
-            command = proc.name()
-            if not command.lower().startswith("py"):
-                return await ctx.send(
-                    f"Unable to automatically update: process name does not start with `py`,"
-                    f" so unable to invoke pip."
-                )
-            else:
-                run = (
-                    command.lower()
-                    + " -m pip install guildmanager-v2"
-                    + (" --upgrade" if not version else f"=={version}")
-                )
+    # @gm_root.command(name="update", hidden=True)
+    # async def update(self, ctx, *, version: str = None):
+    #     """Updates the module to the latest (or provided) version."""
+    #     proc = psutil.Process()
+    #     with proc.oneshot():
+    #         command = proc.name()
+    #         if not command.lower().startswith("py"):
+    #             return await ctx.send(
+    #                 f"Unable to automatically update: process name does not start with `py`,"
+    #                 f" so unable to invoke pip."
+    #             )
+    #         else:
+    #             run = (
+    #                 command.lower()
+    #                 + " -m pip install guildmanager-v2"
+    #                 + (" --upgrade" if not version else f"=={version}")
+    #             )
 
-        paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("```bash", "```", 1600))
-        async with ctx.channel.typing():
-            with ShellReader(run, 120) as reader:
-                async for line in reader:
-                    if paginator.closed:
-                        return
-                    else:
-                        await paginator.add_line(line)
-                await paginator.add_line(f"[status] return code {reader.close_code}")
-        return await paginator.send_to(ctx.channel)
+    #     paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("```bash", "```", 1600))
+    #     async with ctx.channel.typing():
+    #         with ShellReader(run, 120) as reader:
+    #             async for line in reader:
+    #                 if paginator.closed:
+    #                     return
+    #                 else:
+    #                     await paginator.add_line(line)
+    #             await paginator.add_line(f"[status] return code {reader.close_code}")
+    #     return await paginator.send_to(ctx.channel)
 
     @gm_root.command(name="search", aliases=["find", "query"])
-    async def gm_find(self, ctx: commands.Context, *, q: typing.Union[discord.User, int, str]):
+    async def gm_find(self, ctx: commands.Context, *, q: Union[discord.User, int, str]):
         """Iterates through bot.guilds, and if `q` is equal to owner, ID, or name, matches.
 
         For a more in-depth version of this, like checking channel/role names, etc, use `[p]guilds get`."""
         if isinstance(q, discord.User):
             matches = []
-            for guild in self.bot.guilds:
+            async for guild in AsyncIter(self.bot.guilds, steps=100):
                 if guild.owner == q:
                     matches.append(guild)
                     continue
@@ -338,7 +342,7 @@ class GuildManager(commands.Cog):
                         await ctx.send(page)
 
     @gm_root.command(name="growth", aliases=["graph"])
-    async def gm_growth(self, ctx: commands.Context):
+    async def gm_growth(self, ctx: commands.Context, since: TimedeltaConverter):
         """Shows your growth statistics, in a neat little graph!"""
         plt.clf()
         guilds = [guild.me.joined_at for guild in self.bot.guilds]
@@ -360,13 +364,15 @@ class GuildManager(commands.Cog):
         return await ctx.send(embed=e, file=discord.File(buf, "attachment.png"))
 
     @gm_root.command(name="ban")
-    async def ban(self, ctx: commands.Context, guild: int, leave_too: typing.Optional[bool] = False):
+    async def ban(self, ctx: commands.Context, guild: Union[Guild, int], leave_too: Optional[bool] = False):
         """Bans a server from using the bot
 
         if `leave_too` is True, this will leave the server after banning it.
         If it is not, the bot will just not respond to any commands in that server (but will raise checkfailures)."""
         # prevent a softlock with no obvious fix to people with less than 1 braincell
-        guild = self.bot.get_guild(guild)
+        if isinstance(guild, discord.Guild):
+            guild = guild.id
+
         owner_in = list(
             filter(
                 lambda g: ctx.author in g.members and g.id not in self.data.get("banned", []) and g.id != guild.id,
@@ -389,7 +395,7 @@ class GuildManager(commands.Cog):
             return await ctx.send(f"Banned the server {guild.name} `{guild.id}`")
 
     @gm_root.command(name="unban")
-    async def gm_unbn(self, ctx: commands.Context, *, guild: typing.Union[Guild, int]):
+    async def gm_unbn(self, ctx: commands.Context, *, guild: Union[Guild, int]):
         """Unbans a server. See: [p]help guilds ban"""
         if isinstance(guild, discord.Guild):
             guild = guild.id

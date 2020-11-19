@@ -209,3 +209,4 @@ venv.bak/
 pip-selfcheck.json
 .history
 # End of https://www.gitignore.io/api/venv,python,pycharm.history
+.vscode/settings.json
