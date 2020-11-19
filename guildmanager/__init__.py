@@ -373,7 +373,7 @@ class GuildManager(commands.Cog):
             )
         )
         if len(owner_in) <= 0:
-            return await ctx.send(f"Unable to ban as this would softlock the bot.")
+            return await ctx.send("Unable to ban as this would softlock the bot.")
         else:
             if not self.data.get("banned"):
                 self.data["banned"] = [guild.id]
@@ -385,7 +385,7 @@ class GuildManager(commands.Cog):
             except Exception:
                 await ctx.send("Not in that server it seems, but its added to my ban list")
         else:
-            return await ctx.send(f"Banned the server {guild.name}" + "`{guild.id}`" if guild.id else "")
+            return await ctx.send(f"Banned the server {guild.name} `{guild.id}`")
 
     @gm_root.command(name="unban")
     async def gm_unbn(self, ctx: commands.Context, *, guild: typing.Union[Guild, int]):
