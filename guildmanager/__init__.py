@@ -342,7 +342,7 @@ class GuildManager(commands.Cog):
                         await ctx.send(page)
 
     @gm_root.command(name="growth", aliases=["graph"])
-    async def gm_growth(self, ctx: commands.Context, since: TimedeltaConverter):
+    async def gm_growth(self, ctx: commands.Context): #, since: TimedeltaConverter=None futures
         """Shows your growth statistics, in a neat little graph!"""
         plt.clf()
         guilds = [guild.me.joined_at for guild in self.bot.guilds]
