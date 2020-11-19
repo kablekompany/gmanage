@@ -360,12 +360,13 @@ class GuildManager(commands.Cog):
         return await ctx.send(embed=e, file=discord.File(buf, "attachment.png"))
 
     @gm_root.command(name="ban")
-    async def ban(self, ctx: commands.Context, guild: discord.Guild, leave_too: typing.Optional[bool] = False):
+    async def ban(self, ctx: commands.Context, guild: int, leave_too: typing.Optional[bool] = False):
         """Bans a server from using the bot
 
         if `leave_too` is True, this will leave the server after banning it.
         If it is not, the bot will just not respond to any commands in that server (but will raise checkfailures)."""
         # prevent a softlock with no obvious fix to people with less than 1 braincell
+        guild = self.bot.get_guild(guild)
         owner_in = list(
             filter(
                 lambda g: ctx.author in g.members and g.id not in self.data.get("banned", []) and g.id != guild.id,
