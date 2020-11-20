@@ -14,7 +14,7 @@ from humanize import intcomma as ic
 from humanize import naturaltime as nt
 from jishaku.paginators import PaginatorEmbedInterface
 from redbot.core.utils import AsyncIter
-from redbot.core.commands.converters import TimedeltaConverter
+
 from jishaku.shell import ShellReader
 from matplotlib import pyplot as plt
 
