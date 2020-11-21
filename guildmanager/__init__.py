@@ -373,9 +373,9 @@ class GuildManager(commands.Cog):
         if isinstance(guild, discord.Guild):
             guild = guild.id
         if not self.data.get("banned"):
-            self.data["banned"] = [guild.id]
+            self.data["banned"] = [guild]
         else:
-            self.data["banned"].append(guild.id)
+            self.data["banned"].append(guild)
         if leave_too:
             g = bot.get_guild(guild)
             if g is not None:
