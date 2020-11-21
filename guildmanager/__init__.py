@@ -364,7 +364,7 @@ class GuildManager(commands.Cog):
         return await ctx.send(embed=e, file=discord.File(buf, "attachment.png"))
 
     @gm_root.command(name="ban")
-    async def ban(self, ctx: commands.Context, guild: Union[Guild, int], leave_too: Optional[bool] = False):
+    async def ban(self, ctx: commands.Context, leave_too: typing.Optional[bool] = False, *, guild: Union[Guild, int]):
         """Bans a server from using the bot
 
         if `leave_too` is True, this will leave the server after banning it.
@@ -372,27 +372,19 @@ class GuildManager(commands.Cog):
         # prevent a softlock with no obvious fix to people with less than 1 braincell
         if isinstance(guild, discord.Guild):
             guild = guild.id
-
-        owner_in = list(
-            filter(
-                lambda g: ctx.author in g.members and g.id not in self.data.get("banned", []) and g.id != guild.id,
-                self.bot.guilds,
-            )
-        )
-        if len(owner_in) <= 0:
-            return await ctx.send("Unable to ban as this would softlock the bot.")
+        if not self.data.get("banned"):
+            self.data["banned"] = [guild.id]
         else:
-            if not self.data.get("banned"):
-                self.data["banned"] = [guild.id]
-            else:
-                self.data["banned"].append(guild.id)
+            self.data["banned"].append(guild.id)
         if leave_too:
-            try:
-                await guild.leave()
-            except Exception:
-                await ctx.send("Not in that server it seems, but its added to my ban list")
-        else:
-            return await ctx.send(f"Banned the server {guild.name} `{guild.id}`")
+            g = bot.get_guild(guild)
+            if g is not None:
+                await g.leave()
+                return await ctx.send(f"Banned and left server `{guild}`")
+
+                
+        await ctx.send(f"Banned the server {guild}")
+
 
     @gm_root.command(name="unban")
     async def gm_unbn(self, ctx: commands.Context, *, guild: Union[Guild, int]):
