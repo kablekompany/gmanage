@@ -160,7 +160,10 @@ class GuildManager(commands.Cog):
         e.add_field(name="Guild owners, sorted by number of servers they own that uses the bot:", value=v)
 
         paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("", "", max_size=1990), embed=e)
-        for n, guild in enumerate(self.bot.guilds):
+        guilds = []
+        async for g in AsyncIter(self.bot.guilds, steps=100):
+            guilds.append(g)
+        for n, guild in enumerate(guilds):
             await paginator.add_line(f"{ic(n)}. {guild} (`{guild.id}`): {guild.member_count}")
         await paginator.send_to(ctx.channel)
 
