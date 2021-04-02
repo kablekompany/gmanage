@@ -154,8 +154,10 @@ class GuildManager(commands.Cog):
 
         #
         owners = []
+        guilds = []
         async for g in AsyncIter(self.bot.guilds, steps=100):
             owners.append(g.owners)
+            guilds.append(g)
         v = ""
         sorted_ = sorted(set(owners), key=lambda x: percent(owners.count(x), len(owners)), reverse=True)
         for n, user in enumerate(list(sorted_)[:10], start=1):
@@ -163,8 +165,7 @@ class GuildManager(commands.Cog):
         e.add_field(name="Guild owners, sorted by number of servers they own that uses the bot:", value=v)
 
         paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("", "", max_size=1990), embed=e)
-        guilds = []
-            guilds.append(g)
+        
         for n, guild in enumerate(guilds):
             await paginator.add_line(f"{ic(n)}. {guild} (`{guild.id}`): {guild.member_count}")
         await paginator.send_to(ctx.channel)
