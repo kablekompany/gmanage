@@ -152,7 +152,10 @@ class GuildManager(commands.Cog):
             f"**Version:** {__version__}",
         )
 
-        owners = [x.owner for x in self.bot.guilds]
+        #
+        owners = []
+        async for g in AsyncIter(self.bot.guilds, steps=100):
+            owners.append(g.owners)
         v = ""
         sorted_ = sorted(set(owners), key=lambda x: percent(owners.count(x), len(owners)), reverse=True)
         for n, user in enumerate(list(sorted_)[:10], start=1):
@@ -161,7 +164,6 @@ class GuildManager(commands.Cog):
 
         paginator = PaginatorEmbedInterface(self.bot, commands.Paginator("", "", max_size=1990), embed=e)
         guilds = []
-        async for g in AsyncIter(self.bot.guilds, steps=100):
             guilds.append(g)
         for n, guild in enumerate(guilds):
             await paginator.add_line(f"{ic(n)}. {guild} (`{guild.id}`): {guild.member_count}")
