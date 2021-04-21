@@ -156,7 +156,7 @@ class GuildManager(commands.Cog):
         owners = []
         guilds = []
         async for g in AsyncIter(self.bot.guilds, steps=100):
-            owners.append(g.owners)
+            owners.append(g.owner)
             guilds.append(g)
         v = ""
         sorted_ = sorted(set(owners), key=lambda x: percent(owners.count(x), len(owners)), reverse=True)
